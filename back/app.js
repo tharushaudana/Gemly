@@ -1,17 +1,10 @@
 const express = require('express');
 
-const app = express();
-const port = 3000;
+const testRoutes = require('./routes/test.route');
 
-// Middleware to parse JSON
+const app = express();
 app.use(express.json());
 
-// Sample route
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
+app.use('/test', testRoutes);
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+module.exports = app;
