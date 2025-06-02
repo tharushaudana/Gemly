@@ -1,0 +1,102 @@
+
+-- 1. users
+CREATE TABLE users (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- 2. addresses
+CREATE TABLE addresses (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36),
+  name VARCHAR(100),
+  street TEXT,
+  city VARCHAR(100),
+  state VARCHAR(100),
+  zip VARCHAR(20),
+  country VARCHAR(100),
+  is_default BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- 3. products
+CREATE TABLE products (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  category VARCHAR(100),
+  collection VARCHAR(100),
+  description TEXT,
+  short_description TEXT,
+  is_new BOOLEAN DEFAULT FALSE,
+  is_best_seller BOOLEAN DEFAULT FALSE
+);
+
+-- 4. product_images
+CREATE TABLE product_images (
+  id SERIAL PRIMARY KEY,
+  product_id VARCHAR(36),
+  image_url TEXT,
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- 5. product_metal_types
+CREATE TABLE product_metal_types (
+  id SERIAL PRIMARY KEY,
+  product_id VARCHAR(36),
+  metal_type VARCHAR(100),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- 6. product_sizes
+CREATE TABLE product_sizes (
+  id SERIAL PRIMARY KEY,
+  product_id VARCHAR(36),
+  size VARCHAR(50),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- 7. collections
+CREATE TABLE collections (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(100),
+  description TEXT,
+  image TEXT,
+  product_count INT DEFAULT 0
+);
+
+-- 8. testimonials
+CREATE TABLE testimonials (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(100),
+  avatar TEXT,
+  rating INT,
+  comment TEXT,
+  date DATE
+);
+
+-- 9. orders
+CREATE TABLE orders (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36),
+  date DATE,
+  status VARCHAR(20),
+  total DECIMAL(10,2),
+  shipping_address_id VARCHAR(36),
+  payment_method VARCHAR(50),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (shipping_address_id) REFERENCES addresses(id)
+);
+
+-- 10. order_items
+CREATE TABLE order_items (
+  id SERIAL PRIMARY KEY,
+  order_id VARCHAR(36),
+  product_id VARCHAR(36),
+  quantity INT,
+  metal_type VARCHAR(100),
+  size VARCHAR(50),
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
