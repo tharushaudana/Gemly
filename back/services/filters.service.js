@@ -19,7 +19,12 @@ async function getFilters() {
         return {
             collections,
             categories,
-            metals: ['White Gold', 'Yellow Gold', 'Rose Gold', 'Platinum'], // TODO: Replace with actual metals from database
+            metals: [
+                { id: 1, name: 'White Gold' },
+                { id: 2, name: 'Yellow Gold' },
+                { id: 3, name: 'Rose Gold' },
+                { id: 4, name: 'Platinum' },
+            ], // TODO: Replace with actual metals from database
         };
     } catch (error) {
         console.error('Error fetching filters:', error);
