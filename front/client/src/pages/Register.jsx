@@ -59,11 +59,9 @@ const Register = () => {
     }
 
     setErrors(newErrors);
-    // Return true if there are no errors
     return Object.keys(newErrors).length === 0;
   };
 
-  // Removed type annotation : React.FormEvent
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,22 +72,10 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // // The register function from useAuth is assumed to work and return a boolean or similar indicator
-      // const success = await register(name, email, password);
-
-      // if (success) {
-      //   navigate('/');
-      // } else {
-      //   // Assuming register returns false or null on failure
-      //   setErrors({ form: 'Registration failed. Please try again.' });
-      // }
-      
       await callFetch(register(name, email, phone, password));
       navigate('/login');
-
     } catch (err) {
-      // Catching potential errors from the register function
-      console.error("Registration error:", err); // Optional: log the actual error
+      console.error("Registration error:", err); 
       setErrors({ form: 'An error occurred during registration' });
     } finally {
       setIsLoading(false);

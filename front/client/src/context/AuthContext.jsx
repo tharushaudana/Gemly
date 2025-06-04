@@ -51,7 +51,7 @@ const mockOrders = [
       }
     ],
     total: 2499.99,
-    shippingAddress: { // Assume this structure matches Address type
+    shippingAddress: {
       id: 'address-1',
       name: 'Home',
       street: '123 Main St',
@@ -65,20 +65,22 @@ const mockOrders = [
   }
 ];
 
-// Removed type argument <AuthContextType | undefined>
 const AuthContext = createContext(undefined);
 
-// Removed type annotation React.FC<{ children: React.ReactNode }>
 export const AuthProvider = ({ children }) => {
-  // Removed type annotation <User | null>
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  // Removed type annotation <Order[]>
+  
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    return savedToken ? savedToken : null;
+  });
+
   const [orders, setOrders] = useState(mockOrders); // Using mock orders
 
-  const isAuthenticated = user !== null;
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -88,17 +90,29 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Removed parameter and return type annotations
   const login = async (email, password) => {
-    // Mock login functionality
-    if (email === 'demo@example.com' && password === 'password') {
-      setUser(mockUser);
-      return true;
-    }
-    return false;
+    const result = await fetchWithError(
+      fetch('http://localhost:3000/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+      })
+    );
+    
+    localStorage.setItem('token', result.token);
+    localStorage.setItem('user', JSON.stringify(result.customer));
+    setToken(result.token);
+    setUser(result.customer);
+
+    return true;
   };
 
-  // Removed parameter and return type annotations
   const register = async (name, email, phone, password) => {
     await fetchWithError(
       fetch('http://localhost:3000/auth/register',
@@ -114,12 +128,13 @@ export const AuthProvider = ({ children }) => {
             password,
           }),
       })
-    )
+    );
+
     return true;
   };
 
   const logout = () => {
-    setUser(null);
+    clearUserData();
   };
 
   // Removed parameter type annotation
@@ -176,14 +191,54 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const clearUserData = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  };
+
+  // Verifying user token
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/auth/verify', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        clearUserData();
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    if (token) {
+      verifyToken();
+    } else {
+      setIsVerifying(false);
+    }
+  }, [token]);
+
   return (
     <AuthContext.Provider
       value={{
         user,
+        token,
         login,
         register,
         logout,
-        isAuthenticated,
+        isAuthenticated: user !== null,
         updateProfile,
         addAddress,
         updateAddress,
@@ -191,7 +246,11 @@ export const AuthProvider = ({ children }) => {
         orders // Providing mock orders
       }}
     >
-      {children}
+      {isVerifying ? (
+        <div className="h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : children}
     </AuthContext.Provider>
   );
 };

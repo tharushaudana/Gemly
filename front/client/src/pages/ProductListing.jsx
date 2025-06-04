@@ -11,10 +11,13 @@ import { fetchWithError } from '../utils/fetchWithError';
 import { useCallback } from 'react';
 import { useMemo } from 'react';
 import Pagination from '../components/ui/Pagination';
+import { useAuth } from '../context/AuthContext';
 
 // No need to import the Product type in JavaScript
 
 const ProductListing = () => {
+  const { token } = useAuth(); 
+
   const [searchParams, setSearchParams] = useSearchParams();
   // Removed type annotation <Product[]>
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -90,9 +93,13 @@ const ProductListing = () => {
   }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, currentPage]);
 
   const promises = useMemo(() => [
-    () => fetchWithError(fetch(`http://localhost:3000/filters`)),
+    () => fetchWithError(fetch(`http://localhost:3000/filters`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })),
     () => fetchWithError(fetch(`http://localhost:3000/products?${getQuery()}`)),
-  ], [getQuery]);
+  ], [getQuery, token]);
 
   return (
     <AsyncWrapper

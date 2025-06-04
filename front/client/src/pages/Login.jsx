@@ -6,29 +6,29 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 // Assuming useAuth is exported from a JS/TS file
 import { useAuth } from '../context/AuthContext';
+import { useFetch } from '../context/FetchContext';
 
 // Removed type annotation React.FC
 const Login = () => {
   // Removed type annotations from useState
-  const [email, setEmail] = useState('demo@example.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // useAuth, useNavigate, useLocation are React hooks, valid in JS
   const { login } = useAuth();
+  const { callFetch } = useFetch();
   const navigate = useNavigate();
   const location = useLocation();
 
   // Get the redirect path from location state
-  // Removed type assertion/cast - directly access the property
-  const redirectTo = location.state?.redirectTo || '/';
+  const searchParams = new URLSearchParams(location.search);
+  const redirectTo = searchParams.get("redirectTo") || "/"; // fallback if missing
 
-  // Removed type annotation React.FormEvent
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation - logic remains the same
     if (!email || !password) {
       setError('Please enter both email and password');
       return;
@@ -38,20 +38,10 @@ const Login = () => {
     setError('');
 
     try {
-      // The login function is assumed to be available from useAuth context
-      const success = await login(email, password);
-
-      if (success) {
-        navigate(redirectTo);
-      } else {
-        // This error is often handled within the login function itself,
-        // but keeping it here matches the original TS code's structure.
-        // A more robust approach might involve the context returning the error message.
-        setError('Invalid email or password');
-      }
+      await callFetch(login(email, password));
+      navigate(redirectTo);
     } catch (err) {
-      // Basic error handling for unexpected errors
-      console.error("Login error:", err); // Log for debugging
+      console.error("Login error:", err);
       setError('An error occurred during login');
     } finally {
       setIsLoading(false);
@@ -163,13 +153,6 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-          </div>
-
-          {/* Demo credentials */}
-          <div className="mt-4 text-center text-xs text-gray-500">
-            <p>For demo purposes, use:</p>
-            <p>Email: demo@example.com</p>
-            <p>Password: password</p>
           </div>
         </div>
       </div>
