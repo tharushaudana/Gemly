@@ -1,4 +1,4 @@
-const { addAddress, updateAddress, deleteAddress } = require('../services/customer.service');
+const { addAddress, updateAddress, deleteAddress, updateProfile } = require('../services/customer.service');
 
 exports.addAddress = async (req, res) => {
     const { addressData } = req.body;
@@ -45,5 +45,21 @@ exports.deleteAddress = async (req, res) => {
     } catch (error) {
         console.error('Error deleting address:', error);
         res.status(500).json({ error: 'Failed to delete address' });
+    }
+}
+
+exports.updateProfile = async (req, res) => {
+    const profileData = req.body;
+
+    if (!profileData || Object.keys(profileData).length === 0) {
+        return res.status(400).json({ error: 'Profile data is required' });
+    }
+
+    try {
+        const updatedProfile = await updateProfile(req.user.id, profileData);
+        res.status(200).json({ ...updatedProfile });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({ error: 'Failed to update profile' });
     }
 }

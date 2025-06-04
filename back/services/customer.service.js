@@ -53,8 +53,28 @@ async function deleteAddress(customerId, addressId) {
     });
 }
 
+async function updateProfile(customerId, profileData) {
+    // Permitted fields are: name, phone
+    const permittedFields = ['name', 'phone'];
+    const profileDataKeys = Object.keys(profileData);
+    const invalidFields = profileDataKeys.filter(key => !permittedFields.includes(key));
+
+    if (invalidFields.length > 0) {
+        throw new Error(`Invalid fields: ${invalidFields.join(', ')}`);
+    }
+
+    // Update the customer profile
+    return await prisma.customers.update({
+        where: {
+            id: customerId,
+        },
+        data: profileData,
+    });
+}
+
 module.exports = {
     addAddress,
     updateAddress,
-    deleteAddress
+    deleteAddress,
+    updateProfile,
 };
