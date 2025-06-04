@@ -3,12 +3,14 @@ import { MapPin, Plus, Edit, Trash2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
+import { useFetch } from '../../context/FetchContext';
 // Removed: import { Address } from '../../types';
 
 // Removed type annotation React.FC
 const Profile = () => {
   // useAuth hook is assumed to return regular JavaScript values/functions
   const { user, updateProfile, addAddress, updateAddress, removeAddress } = useAuth();
+  const { callFetch } = useFetch();
 
   // Profile edit state - Removed type annotation
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -95,23 +97,23 @@ const Profile = () => {
   };
 
   // Handle address save
-  const handleSaveAddress = () => {
+  const handleSaveAddress = async () => {
     if (isEditingAddress && currentAddressId) {
       // Update existing address
-      updateAddress({
+      await callFetch(updateAddress({
         id: currentAddressId,
         ...addressData
-      });
+      }));
     } else {
       // Add new address
-      addAddress(addressData);
+      await callFetch(addAddress(addressData));
     }
     resetAddressForm();
   };
 
   // Handle address delete - Removed type annotation
-  const handleDeleteAddress = (addressId) => { // addressId: string -> addressId
-    removeAddress(addressId);
+  const handleDeleteAddress = async (addressId) => { // addressId: string -> addressId
+    await callFetch(removeAddress(addressId));
   };
 
   return (

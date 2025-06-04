@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  
+
   const [token, setToken] = useState(() => {
     const savedToken = localStorage.getItem('token');
     return savedToken ? savedToken : null;
@@ -102,9 +102,9 @@ export const AuthProvider = ({ children }) => {
             email,
             password,
           }),
-      })
+        })
     );
-    
+
     localStorage.setItem('token', result.token);
     localStorage.setItem('user', JSON.stringify(result.customer));
     setToken(result.token);
@@ -124,10 +124,10 @@ export const AuthProvider = ({ children }) => {
           body: JSON.stringify({
             name,
             email,
-            phone, 
+            phone,
             password,
           }),
-      })
+        })
     );
 
     return true;
@@ -137,57 +137,90 @@ export const AuthProvider = ({ children }) => {
     clearUserData();
   };
 
-  // Removed parameter type annotation
   const updateProfile = (updates) => {
     if (user) {
       setUser({ ...user, ...updates });
     }
   };
 
-  // Removed parameter type annotation
-  const addAddress = (address) => {
-    if (user) {
-      // Removed type annotation for newAddress
-      const newAddress = {
-        ...address, // Assumes 'address' object structure matches Address without 'id'
-        id: 'address-' + Date.now()
-      };
+  const addAddress = async (address) => {
+    try {
+      const addr = await fetchWithError(
+        fetch('http://localhost:3000/customer/add_address',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressData: address,
+            }),
+          })
+      );
 
-      // If this is the first address or it's marked as default, make sure it's the only default
-      const updatedAddresses = address.isDefault
-        ? user.addresses.map(addr => ({ ...addr, isDefault: false }))
-        : [...user.addresses];
-
-      updatedAddresses.push(newAddress);
-      setUser({ ...user, addresses: updatedAddresses });
-    }
-  };
-
-  // Removed parameter type annotation
-  const updateAddress = (address) => {
-    if (user) {
-      let updatedAddresses;
-
-      // If this address is being set as default, update all other addresses
-      if (address.isDefault) {
-        updatedAddresses = user.addresses.map(addr =>
-          addr.id === address.id ? address : { ...addr, isDefault: false }
-        );
-      } else {
-        updatedAddresses = user.addresses.map(addr =>
-          addr.id === address.id ? address : addr
-        );
+      if (user) {
+        const updatedAddresses = [...user.addresses, { ...addr }];
+        setUser({ ...user, addresses: updatedAddresses });
       }
-
-      setUser({ ...user, addresses: updatedAddresses });
+    } catch (error) {
+      console.error('Error adding address:', error);
+      throw new Error('Failed to add address');
     }
   };
 
-  // Removed parameter type annotation
-  const removeAddress = (addressId) => {
-    if (user) {
-      const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
-      setUser({ ...user, addresses: updatedAddresses });
+  const updateAddress = async (address) => {
+    try {
+      const updatedAddr = await fetchWithError(
+        fetch('http://localhost:3000/customer/update_address',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressId: address.id,
+              addressData: address,
+            }),
+          })
+      );
+
+      if (user) {
+        const updatedAddresses = user.addresses.map(addr =>
+          addr.id === updatedAddr.id ? updatedAddr : addr
+        );
+        setUser({ ...user, addresses: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Error updating address:', error);
+      throw new Error('Failed to update address');
+    }
+  };
+
+  const removeAddress = async (addressId) => {
+    try {
+      await fetchWithError(
+        fetch('http://localhost:3000/customer/delete_address',
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressId,
+            }),
+          })
+      );
+
+      if (user) {
+        const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
+        setUser({ ...user, addresses: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Error removing address:', error);
+      throw new Error('Failed to remove address');
     }
   };
 
