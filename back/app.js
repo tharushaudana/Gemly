@@ -1,10 +1,10 @@
 const express = require('express');
 
-const testRoutes = require('./routes/test.route');
+const productRoutes = require('./routes/product.route');
 
 const app = express();
 app.use(express.json());
 
-app.use('/test', testRoutes);
+app.use('/products', productRoutes);
 
 module.exports = app;
