@@ -14,10 +14,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model Customers {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
+  phone     String   @unique
+  password  String
+  addresses CustomerAddresses[]
+}
+
+model CustomerAddresses {
+  id              Int      @id @default(autoincrement())
+  addressName     String
+  streetAddress   String
+  city            String
+  stateOrProvince String
+  zipOrPostalCode String
+  country         String   @default("Sri Lanka")
+  customer        Customers @relation(fields: [customerId], references: [id])
+  customerId      Int
 }
 
 model Products {
