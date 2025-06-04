@@ -10,6 +10,7 @@ import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
 import { useCallback } from 'react';
 import { useMemo } from 'react';
+import Pagination from '../components/ui/Pagination';
 
 // No need to import the Product type in JavaScript
 
@@ -35,40 +36,9 @@ const ProductListing = () => {
   // Filter data
   const [filterData, setFilterData] = useState(null);
 
-  // // Apply filters - logic remains the same
-  // useEffect(() => {
-  //   // Get filtered products
-  //   let filtered = getFilteredProducts(
-  //     selectedCollection || undefined,
-  //     selectedCategory || undefined,
-  //     searchParams.get('filter') === 'bestsellers' ? true : undefined,
-  //     searchParams.get('filter') === 'new' ? true : undefined,
-  //     priceRange,
-  //     selectedMetalType || undefined
-  //   );
-
-  //   // Apply sorting - logic remains the same
-  //   switch (sortOption) {
-  //     case 'price-asc':
-  //       // Sorting assumes 'price' property exists, which is fine in JS
-  //       filtered = [...filtered].sort((a, b) => a.price - b.price);
-  //       break;
-  //     case 'price-desc':
-  //       filtered = [...filtered].sort((a, b) => b.price - a.price);
-  //       break;
-  //     case 'bestsellers':
-  //       // Sorting assumes 'isBestSeller' property exists
-  //       filtered = [...filtered].sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
-  //       break;
-  //     case 'newest':
-  //     default:
-  //       // Sorting assumes 'isNew' property exists
-  //       filtered = [...filtered].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-  //       break;
-  //   }
-
-  //   setFilteredProducts(filtered);
-  // }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, searchParams]);
+  // Pagination data
+  const [pagination, setPagination] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Update URL params when filters change - logic remains the same
   useEffect(() => {
@@ -78,10 +48,11 @@ const ProductListing = () => {
     if (selectedCategory) params.set('category', selectedCategory);
     if (selectedMetalType) params.set('metal', selectedMetalType);
     if (sortOption) params.set('sort', sortOption);
+    if (currentPage) params.set('page', currentPage);
 
     // { replace: true } is part of react-router-dom v6+ API, valid in JS
     setSearchParams(params, { replace: true });
-  }, [selectedCollection, selectedCategory, selectedMetalType, sortOption, setSearchParams]);
+  }, [selectedCollection, selectedCategory, selectedMetalType, sortOption, currentPage, setSearchParams]);
 
   // Reset filters - logic remains the same
   const handleResetFilters = () => {
@@ -103,6 +74,7 @@ const ProductListing = () => {
     
     setFilterData(filterData);
     setFilteredProducts(productData.data);
+    setPagination(productData.pagination);
   };
 
   const getQuery = useCallback(() => {
@@ -112,9 +84,10 @@ const ProductListing = () => {
     if (selectedCategory) query.set('category', selectedCategory);
     if (selectedMetalType) query.set('metal', selectedMetalType);
     if (sortOption) query.set('sort', sortOption);
+    if (currentPage) query.set('page', currentPage);
 
     return query.toString();
-  }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption]);
+  }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, currentPage]);
 
   const promises = useMemo(() => [
     () => fetchWithError(fetch(`http://localhost:3000/filters`)),
@@ -125,7 +98,7 @@ const ProductListing = () => {
     <AsyncWrapper
       promises={promises}
       onSuccess={handleOnSuccess}
-      dependencies={[selectedCollection, selectedCategory, selectedMetalType, sortOption]}
+      dependencies={[selectedCollection, selectedCategory, selectedMetalType, sortOption, currentPage]}
     >
       <div className="pt-20 pb-16">
         <div className="container mx-auto px-4">
@@ -419,6 +392,16 @@ const ProductListing = () => {
                     Reset Filters
                   </Button>
                 </div>
+              )}
+
+              {/* Pagination */}
+              {pagination && (
+                <Pagination
+                  pagination={pagination}
+                  onPageChange={(page) => {
+                    setCurrentPage(page);                    
+                  }}
+                />
               )}
             </div>
           </div>
