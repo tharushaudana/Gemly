@@ -7,6 +7,9 @@ import Button from '../components/ui/Button';
 // Assuming getFilteredProducts and products are exported from a JS/TS file
 import { getFilteredProducts, products } from '../data/products';
 import AsyncWrapper from '../components/AsyncWrapper';
+import { fetchWithError } from '../utils/fetchWithError';
+import { useCallback } from 'react';
+import { useMemo } from 'react';
 
 // No need to import the Product type in JavaScript
 
@@ -29,40 +32,43 @@ const ProductListing = () => {
   const collections = Array.from(new Set(products.map(p => p.collection)));
   const metalTypes = Array.from(new Set(products.flatMap(p => p.metalType)));
 
-  // Apply filters - logic remains the same
-  useEffect(() => {
-    // Get filtered products
-    let filtered = getFilteredProducts(
-      selectedCollection || undefined,
-      selectedCategory || undefined,
-      searchParams.get('filter') === 'bestsellers' ? true : undefined,
-      searchParams.get('filter') === 'new' ? true : undefined,
-      priceRange,
-      selectedMetalType || undefined
-    );
+  // Filter data
+  const [filterData, setFilterData] = useState(null);
 
-    // Apply sorting - logic remains the same
-    switch (sortOption) {
-      case 'price-asc':
-        // Sorting assumes 'price' property exists, which is fine in JS
-        filtered = [...filtered].sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        filtered = [...filtered].sort((a, b) => b.price - a.price);
-        break;
-      case 'bestsellers':
-        // Sorting assumes 'isBestSeller' property exists
-        filtered = [...filtered].sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
-        break;
-      case 'newest':
-      default:
-        // Sorting assumes 'isNew' property exists
-        filtered = [...filtered].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-        break;
-    }
+  // // Apply filters - logic remains the same
+  // useEffect(() => {
+  //   // Get filtered products
+  //   let filtered = getFilteredProducts(
+  //     selectedCollection || undefined,
+  //     selectedCategory || undefined,
+  //     searchParams.get('filter') === 'bestsellers' ? true : undefined,
+  //     searchParams.get('filter') === 'new' ? true : undefined,
+  //     priceRange,
+  //     selectedMetalType || undefined
+  //   );
 
-    setFilteredProducts(filtered);
-  }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, searchParams]);
+  //   // Apply sorting - logic remains the same
+  //   switch (sortOption) {
+  //     case 'price-asc':
+  //       // Sorting assumes 'price' property exists, which is fine in JS
+  //       filtered = [...filtered].sort((a, b) => a.price - b.price);
+  //       break;
+  //     case 'price-desc':
+  //       filtered = [...filtered].sort((a, b) => b.price - a.price);
+  //       break;
+  //     case 'bestsellers':
+  //       // Sorting assumes 'isBestSeller' property exists
+  //       filtered = [...filtered].sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
+  //       break;
+  //     case 'newest':
+  //     default:
+  //       // Sorting assumes 'isNew' property exists
+  //       filtered = [...filtered].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+  //       break;
+  //   }
+
+  //   setFilteredProducts(filtered);
+  // }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, searchParams]);
 
   // Update URL params when filters change - logic remains the same
   useEffect(() => {
@@ -92,12 +98,34 @@ const ProductListing = () => {
     setIsMobileFilterOpen(!isMobileFilterOpen);
   };
 
+  const handleOnSuccess = (filterData, productData) => {
+    console.log('Filters:', filterData);
+    
+    setFilterData(filterData);
+    setFilteredProducts(productData.data);
+  };
+
+  const getQuery = useCallback(() => {
+    const query = new URLSearchParams();
+
+    if (selectedCollection) query.set('collection', selectedCollection);
+    if (selectedCategory) query.set('category', selectedCategory);
+    if (selectedMetalType) query.set('metal', selectedMetalType);
+    if (sortOption) query.set('sort', sortOption);
+
+    return query.toString();
+  }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption]);
+
+  const promises = useMemo(() => [
+    () => fetchWithError(fetch(`http://localhost:3000/filters`)),
+    () => fetchWithError(fetch(`http://localhost:3000/products?${getQuery()}`)),
+  ], [getQuery]);
+
   return (
     <AsyncWrapper
-      promises={[() => fetch('http://localhost:3000/filters').then(res => res.json())]} // Assuming this fetches products data
-      onSuccess={(data) => {
-        console.log('Fetched data:', data);
-      }}
+      promises={promises}
+      onSuccess={handleOnSuccess}
+      dependencies={[selectedCollection, selectedCategory, selectedMetalType, sortOption]}
     >
       <div className="pt-20 pb-16">
         <div className="container mx-auto px-4">
@@ -145,16 +173,16 @@ const ProductListing = () => {
                 <div className="mb-6">
                   <h3 className="font-medium mb-3">Collection</h3>
                   <div className="space-y-2">
-                    {collections.map(collection => (
-                      <label key={collection} className="flex items-center">
+                    {filterData && filterData.collections.map(collection => (
+                      <label key={collection.id} className="flex items-center">
                         <input
                           type="radio"
                           name="collection"
-                          checked={selectedCollection === collection}
-                          onChange={() => setSelectedCollection(collection)}
+                          checked={selectedCollection === collection.name}
+                          onChange={() => setSelectedCollection(collection.name)}
                           className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                         />
-                        <span className="ml-2 text-gray-700">{collection}</span>
+                        <span className="ml-2 text-gray-700">{collection.name}</span>
                       </label>
                     ))}
                     <label className="flex items-center">
@@ -174,16 +202,16 @@ const ProductListing = () => {
                 <div className="mb-6">
                   <h3 className="font-medium mb-3">Category</h3>
                   <div className="space-y-2">
-                    {categories.map(category => (
-                      <label key={category} className="flex items-center">
+                    {filterData && filterData.categories.map(category => (
+                      <label key={category.id} className="flex items-center">
                         <input
                           type="radio"
                           name="category"
-                          checked={selectedCategory === category}
-                          onChange={() => setSelectedCategory(category)}
+                          checked={selectedCategory === category.name}
+                          onChange={() => setSelectedCategory(category.name)}
                           className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                         />
-                        <span className="ml-2 text-gray-700">{category}</span>
+                        <span className="ml-2 text-gray-700">{category.name}</span>
                       </label>
                     ))}
                     <label className="flex items-center">
@@ -203,16 +231,16 @@ const ProductListing = () => {
                 <div className="mb-6">
                   <h3 className="font-medium mb-3">Metal Type</h3>
                   <div className="space-y-2">
-                    {metalTypes.map(metal => (
-                      <label key={metal} className="flex items-center">
+                    {filterData && filterData.metals.map(metal => (
+                      <label key={metal.id} className="flex items-center">
                         <input
                           type="radio"
                           name="metal"
-                          checked={selectedMetalType === metal}
-                          onChange={() => setSelectedMetalType(metal)}
+                          checked={selectedMetalType === metal.name}
+                          onChange={() => setSelectedMetalType(metal.name)}
                           className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                         />
-                        <span className="ml-2 text-gray-700">{metal}</span>
+                        <span className="ml-2 text-gray-700">{metal.name}</span>
                       </label>
                     ))}
                     <label className="flex items-center">
@@ -225,26 +253,6 @@ const ProductListing = () => {
                       />
                       <span className="ml-2 text-gray-700">All Metals</span>
                     </label>
-                  </div>
-                </div>
-
-                {/* Price Range Filter */}
-                <div>
-                  <h3 className="font-medium mb-3">Price Range</h3>
-                  <div className="flex flex-col space-y-4">
-                    <input
-                      type="range"
-                      min="0"
-                      max="10000"
-                      step="100"
-                      value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>${priceRange[0]}</span>
-                      <span>${priceRange[1]}</span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -266,16 +274,16 @@ const ProductListing = () => {
                   <div className="mb-6">
                     <h3 className="font-medium mb-3">Collection</h3>
                     <div className="space-y-2">
-                      {collections.map(collection => (
-                        <label key={collection} className="flex items-center">
+                      {filterData && filterData.collections.map(collection => (
+                        <label key={collection.id} className="flex items-center">
                           <input
                             type="radio"
                             name="collection-mobile" // Use different name for mobile group
-                            checked={selectedCollection === collection}
-                            onChange={() => setSelectedCollection(collection)}
+                            checked={selectedCollection === collection.name}
+                            onChange={() => setSelectedCollection(collection.name)}
                             className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                           />
-                          <span className="ml-2 text-gray-700">{collection}</span>
+                          <span className="ml-2 text-gray-700">{collection.name}</span>
                         </label>
                       ))}
                       <label className="flex items-center">
@@ -295,16 +303,16 @@ const ProductListing = () => {
                   <div className="mb-6">
                     <h3 className="font-medium mb-3">Category</h3>
                     <div className="space-y-2">
-                      {categories.map(category => (
-                        <label key={category} className="flex items-center">
+                      {filterData && filterData.categories.map(category => (
+                        <label key={category.id} className="flex items-center">
                           <input
                             type="radio"
                             name="category-mobile" // Use different name for mobile group
-                            checked={selectedCategory === category}
-                            onChange={() => setSelectedCategory(category)}
+                            checked={selectedCategory === category.name}
+                            onChange={() => setSelectedCategory(category.name)}
                             className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                           />
-                          <span className="ml-2 text-gray-700">{category}</span>
+                          <span className="ml-2 text-gray-700">{category.name}</span>
                         </label>
                       ))}
                       <label className="flex items-center">
@@ -324,16 +332,16 @@ const ProductListing = () => {
                   <div className="mb-6">
                     <h3 className="font-medium mb-3">Metal Type</h3>
                     <div className="space-y-2">
-                      {metalTypes.map(metal => (
-                        <label key={metal} className="flex items-center">
+                      {filterData && filterData.metals.map(metal => (
+                        <label key={metal.id} className="flex items-center">
                           <input
                             type="radio"
                             name="metal-mobile" // Use different name for mobile group
-                            checked={selectedMetalType === metal}
-                            onChange={() => setSelectedMetalType(metal)}
+                            checked={selectedMetalType === metal.name}
+                            onChange={() => setSelectedMetalType(metal.name)}
                             className="h-4 w-4 text-[#D4AF37] focus:ring-[#D4AF37]"
                           />
-                          <span className="ml-2 text-gray-700">{metal}</span>
+                          <span className="ml-2 text-gray-700">{metal.name}</span>
                         </label>
                       ))}
                       <label className="flex items-center">
@@ -346,26 +354,6 @@ const ProductListing = () => {
                         />
                         <span className="ml-2 text-gray-700">All Metals</span>
                       </label>
-                    </div>
-                  </div>
-
-                  {/* Price Range Filter */}
-                  <div className="mb-6">
-                    <h3 className="font-medium mb-3">Price Range</h3>
-                    <div className="flex flex-col space-y-4">
-                      <input
-                        type="range"
-                        min="0"
-                        max="10000"
-                        step="100"
-                        value={priceRange[1]}
-                        onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-sm text-gray-600">
-                        <span>${priceRange[0]}</span>
-                        <span>${priceRange[1]}</span>
-                      </div>
                     </div>
                   </div>
 
@@ -406,8 +394,8 @@ const ProductListing = () => {
                   >
                     <option value="newest">Newest</option>
                     <option value="bestsellers">Most Popular</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
                   </select>
                   <ChevronDown size={16} className="absolute right-3 top-3 text-gray-500" />
                 </div>

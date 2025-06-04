@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const AsyncWrapper = ({ promises, onSuccess, children }) => {
+const AsyncWrapper = ({ promises, onSuccess, dependencies = [], children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -29,7 +29,7 @@ const AsyncWrapper = ({ promises, onSuccess, children }) => {
         return () => {
             isMounted = false;
         };
-    }, [promises]);
+    }, dependencies.length ? dependencies : [promises]);
 
     if (loading) return (
         <div className="h-screen flex items-center justify-center">
