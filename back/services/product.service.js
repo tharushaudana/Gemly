@@ -99,6 +99,14 @@ async function getProducts(queryParams) {
             ...sqlParams
         );
 
+        // Preprocess product data
+        products.forEach(product => {
+            if (product.metalType) product.metalType = JSON.parse(product.metalType);
+            if (product.images) product.images = JSON.parse(product.images);
+            product.isNew = Boolean(product.isNew);
+            product.isBestSeller = Boolean(product.isBestSeller);
+        });
+
         const [{ count }] = await prisma.$queryRawUnsafe(
             `SELECT COUNT(*) as count FROM products ${whereSQL}`,
             ...sqlParams
