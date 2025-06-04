@@ -129,6 +129,28 @@ async function getProducts(queryParams) {
     }
 }
 
+async function getProductById(productId) {
+    try {
+        const product = await prisma.products.findUnique({
+            where: { id: productId },
+            include: {
+                collection: true,
+                category: true,
+            },
+        });
+
+        if (!product) {
+            return null;
+        }
+
+        return product;
+    } catch (error) {
+        console.error('Error fetching product by ID:', error);
+        throw new Error('Could not retrieve product.');
+    }
+}
+
 module.exports = {
     getProducts,
+    getProductById,
 };
