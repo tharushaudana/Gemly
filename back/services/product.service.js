@@ -104,8 +104,6 @@ async function getProducts(queryParams) {
       ...sqlParams
     );
 
-    console.log(Number(count), 'count');
-
     const totalPages = Math.ceil(Number(count) / limit);
 
     return {
