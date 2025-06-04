@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { fetchWithError } from '../utils/fetchWithError';
 // Removed import for types (User, Address, Order) as they are not needed in JS
 
 // Removed interface AuthContextType
@@ -98,16 +99,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Removed parameter and return type annotations
-  const register = async (name, email, password) => {
-    // Mock register functionality
-    // Removed type annotation for newUser
-    const newUser = {
-      id: 'user-' + Date.now(),
-      name,
-      email,
-      addresses: []
-    };
-    setUser(newUser);
+  const register = async (name, email, phone, password) => {
+    await fetchWithError(
+      fetch('http://localhost:3000/auth/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone, 
+            password,
+          }),
+      })
+    )
     return true;
   };
 

@@ -6,12 +6,15 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 // Assuming useAuth is a custom hook implemented in JavaScript or correctly transpiled
 import { useAuth } from '../context/AuthContext';
+import { useFetch } from '../context/FetchContext';
+import { fetchWithError } from '../utils/fetchWithError';
 
 // Removed type annotation : React.FC
 const Register = () => {
   // Removed type annotations for useState
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   // Removed type annotation <Record<string, string>>
@@ -20,6 +23,7 @@ const Register = () => {
 
   // useAuth and useNavigate are standard React/react-router-dom hooks, valid in JS
   const { register } = useAuth();
+  const { callFetch } = useFetch();
   const navigate = useNavigate();
 
   // Removed type annotation : boolean
@@ -36,6 +40,12 @@ const Register = () => {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = 'Email is invalid';
+    }
+
+    if (!phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(phone)) {
+      newErrors.phone = 'Phone number must be 10 digits';
     }
 
     if (!password) {
@@ -64,15 +74,19 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // The register function from useAuth is assumed to work and return a boolean or similar indicator
-      const success = await register(name, email, password);
+      // // The register function from useAuth is assumed to work and return a boolean or similar indicator
+      // const success = await register(name, email, password);
 
-      if (success) {
-        navigate('/');
-      } else {
-        // Assuming register returns false or null on failure
-        setErrors({ form: 'Registration failed. Please try again.' });
-      }
+      // if (success) {
+      //   navigate('/');
+      // } else {
+      //   // Assuming register returns false or null on failure
+      //   setErrors({ form: 'Registration failed. Please try again.' });
+      // }
+      
+      await callFetch(register(name, email, phone, password));
+      navigate('/login');
+
     } catch (err) {
       // Catching potential errors from the register function
       console.error("Registration error:", err); // Optional: log the actual error
@@ -120,6 +134,16 @@ const Register = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 error={errors.email} // Accessing errors object properties
+                required
+              />
+
+              <Input
+                label="Phone"
+                type="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="077xxxxxxx"
+                error={errors.phone} // Accessing errors object properties
                 required
               />
 
