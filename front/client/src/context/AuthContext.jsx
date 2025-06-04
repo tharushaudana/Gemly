@@ -137,9 +137,27 @@ export const AuthProvider = ({ children }) => {
     clearUserData();
   };
 
-  const updateProfile = (updates) => {
-    if (user) {
-      setUser({ ...user, ...updates });
+  const updateProfile = async (updates) => {
+    try {
+      await fetchWithError(
+        fetch('http://localhost:3000/customer/update_profile',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(updates),
+          })
+      );
+
+      const updatedUser = {...user, ...updates};
+
+      setUser({ ...updatedUser });
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw new Error('Failed to update profile');
     }
   };
 

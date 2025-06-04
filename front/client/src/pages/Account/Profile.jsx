@@ -16,7 +16,7 @@ const Profile = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
-    email: user?.email || ''
+    phone: user?.phone || ''
   });
 
   // Address form state - Removed type annotations
@@ -46,7 +46,7 @@ const Profile = () => {
     if (user) {
       updateProfile({
         name: profileData.name,
-        email: profileData.email
+        phone: profileData.phone
       });
       setIsEditingProfile(false);
     }
@@ -146,10 +146,10 @@ const Profile = () => {
             />
 
             <Input
-              label="Email Address"
-              name="email"
-              type="email"
-              value={profileData.email}
+              label="Phone"
+              name="phone"
+              type="phone"
+              value={profileData.phone}
               onChange={handleProfileChange}
             />
 
@@ -173,6 +173,11 @@ const Profile = () => {
             <div>
               <p className="text-sm text-gray-500">Email Address</p>
               <p className="font-medium">{user?.email}</p>
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-500">Phone</p>
+              <p className="font-medium">{user?.phone}</p>
             </div>
           </div>
         )}
