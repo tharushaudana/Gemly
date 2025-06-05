@@ -26,6 +26,7 @@ const Button = ({
   // These maps still work the same way in JavaScript
   const variantClasses = {
     primary: 'bg-[#D4AF37] text-white hover:bg-[#C19B22] focus:ring-[#D4AF37]',
+    primary2: 'bg-[#D4AF37] text-[#000000] hover:bg-[#C19B22] focus:ring-[#D4AF37]',
     secondary: 'bg-[#1A237E] text-white hover:bg-[#151C60] focus:ring-[#1A237E]',
     outline: 'border border-[#D4AF37] text-[#D4AF37] bg-transparent hover:bg-[#D4AF37]/10 focus:ring-[#D4AF37]',
     ghost: 'text-[#1A237E] hover:bg-[#1A237E]/10 focus:ring-[#1A237E]'

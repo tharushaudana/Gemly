@@ -2,38 +2,15 @@ import React from 'react';
 import { Mail } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { Link } from 'react-router-dom';
-import Newsletter from '../components/ui/Newsletter';
 
-// Removed the : React.FC type annotation
 const About = () => {
-  const team = [
-    {
-      name: 'Emily Johnson',
-      role: 'Founder & Creative Director',
-      image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg',
-      bio: 'With over 15 years of experience in fine jewelry design, Emily founded LUXE with a vision to create timeless pieces that celebrate life\'s special moments.'
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Master Jeweler',
-      image: 'https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg',
-      bio: 'Michael brings 20 years of craftsmanship to LUXE. His meticulous attention to detail ensures that each piece meets our exacting standards of quality.'
-    },
-    {
-      name: 'Sophia Rodriguez',
-      role: 'Head of Customer Experience',
-      image: 'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg',
-      bio: 'Sophia leads our customer experience team, ensuring that every client receives personalized attention and exceptional service from beginning to end.'
-    }
-  ];
-
   return (
     <div className="pt-20 pb-16">
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.pexels.com/photos/4937185/pexels-photo-4937185.jpeg"
+            src="assets/panaromic-banner.jpg"
             alt="Jewelry craftsmanship"
             className="w-full h-full object-cover"
           />
@@ -44,7 +21,7 @@ const About = () => {
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-serif mb-4">Our Story</h1>
             <p className="text-lg md:text-xl mb-0 text-white/90">
-              Crafting exquisite jewelry with passion and precision since 1985
+              Crafting exquisite jewelry with passion and precision.
             </p>
           </div>
         </div>
@@ -69,7 +46,7 @@ const About = () => {
 
             <div className="relative">
               <img
-                src="https://images.pexels.com/photos/9428943/pexels-photo-9428943.jpeg"
+                src="assets/mission.jpg"
                 alt="Jewelry crafting"
                 className="rounded-lg shadow-xl w-full h-auto"
               />
@@ -123,35 +100,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Our Team */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif text-gray-900 mb-3">Meet Our Team</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              The talented individuals behind LUXE's exquisite jewelry collection.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-medium text-gray-900 mb-1">{member.name}</h3>
-                  <p className="text-[#D4AF37] mb-3">{member.role}</p>
-                  <p className="text-gray-600">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Contact CTA */}
       <section className="py-16 bg-[#1A237E] text-white">
         <div className="container mx-auto px-4">
@@ -162,9 +110,9 @@ const About = () => {
             </p>
             <Link to="/contact">
               <Button
-                variant="primary"
+                variant="primary2"
                 size="lg"
-                className="bg-white hover:bg-white/90 text-[#1A237E] flex items-center mx-auto"
+                className="bg-white hover:bg-white/90 text-[#000000] flex items-center mx-auto"
               >
                 <Mail size={18} className="mr-2" />
                 Contact Us
@@ -173,9 +121,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Newsletter */}
-      <Newsletter />
     </div>
   );
 };

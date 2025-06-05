@@ -145,7 +145,7 @@ const Home = () => {
         <section className="py-20 bg-[#1A237E] text-white relative overflow-hidden">
           <div className="absolute inset-0 z-0 opacity-20">
             <img
-              src="https://images.pexels.com/photos/9428921/pexels-photo-9428921.jpeg"
+              src="assets/panaromic-banner.jpg"
               alt="Luxury jewelry background"
               className="w-full h-full object-cover"
             />
@@ -158,7 +158,7 @@ const Home = () => {
                 Each piece in our collection is meticulously handcrafted by master artisans who bring decades of expertise to their work. We use only the finest materials, ethically sourced from around the world.
               </p>
               <Link to="/about">
-                <Button variant="primary" size="lg" className="bg-white hover:bg-white/90 text-[#000]">
+                <Button variant="primary2" size="lg" className="bg-white hover:bg-white/90 text-[#000000]">
                   Discover Our Process
                 </Button>
               </Link>
