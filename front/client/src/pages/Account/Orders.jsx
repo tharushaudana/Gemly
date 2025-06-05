@@ -2,15 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, ChevronRight, Eye } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import { useMemo } from 'react';
 import AsyncWrapper from '../../components/AsyncWrapper';
 import { fetchWithError } from '../../utils/fetchWithError';
+import { apiUrl } from '../../utils/api';
 
 const Orders = () => {
-  const { token } = useAuth();
-
   const [orders, setOrders] = useState([]);
 
   const getStatusColor = (status) => {
@@ -30,13 +28,11 @@ const Orders = () => {
 
   const handleOnSuccess = (data) => {
     setOrders(data);
-    // console.log("Orders data:", data);
-    
   };
 
   const promises = useMemo(() => [
     () => fetchWithError(
-      fetch(`http://localhost:3000/orders`, {
+      fetch(apiUrl('/orders'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -18,7 +18,6 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load the PayHere script once when the component mounts
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://www.payhere.lk/lib/payhere.js";
@@ -92,25 +91,11 @@ const Checkout = () => {
     await callFetch(createCheckoutSession());
 
     setIsSubmitting(false);
-
-    // setTimeout(() => {
-    //   // Clear the cart and navigate to the confirmation page
-    //   clearCart();
-    //   navigate('/order-confirmation', {
-    //     state: {
-    //       orderId: 'ORD-' + Date.now().toString().substring(5), // Simple client-side ID
-    //       orderTotal: orderTotal.toFixed(2) // Pass the calculated total
-    //     }
-    //   });
-
-    //   setIsSubmitting(false);
-    // }, 1500);
   };
 
   const subtotal = getTotalPrice();
   const orderTotal = subtotal;
 
-  // Check if user is loaded and has addresses before rendering the existing address section
   const hasExistingAddresses = user && user.addresses && user.addresses.length > 0;
 
   return (
@@ -126,7 +111,6 @@ const Checkout = () => {
               <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
                 <h2 className="text-xl font-medium text-gray-900 mb-4">Shipping Address</h2>
 
-                {/* Conditionally render the existing address option */}
                 {hasExistingAddresses ? (
                   <div className="mb-6">
                     <div className="space-y-4">
@@ -204,8 +188,8 @@ const Checkout = () => {
                         )}
                         <div className="flex justify-between mt-1">
                           {/* Use toLocaleString for currency formatting */}
-                          <span className="text-sm">{item.quantity} × ${item.product.price.toLocaleString()}</span>
-                          <span className="font-medium">${(item.product.price * item.quantity).toLocaleString()}</span>
+                          <span className="text-sm">{item.quantity} × Rs. {item.product.price.toLocaleString()}</span>
+                          <span className="font-medium">Rs. {(item.product.price * item.quantity).toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
@@ -216,14 +200,14 @@ const Checkout = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
                     {/* Use toLocaleString for currency formatting */}
-                    <span className="font-medium">${subtotal.toLocaleString()}</span>
+                    <span className="font-medium">Rs. {subtotal.toLocaleString()}</span>
                   </div>
 
                   <div className="border-t border-gray-200 pt-3 mt-3">
                     <div className="flex justify-between">
                       <span className="font-medium text-lg">Total</span>
                       {/* Format total amount to 2 decimal places */}
-                      <span className="font-medium text-lg">${orderTotal.toFixed(2)}</span>
+                      <span className="font-medium text-lg">Rs. {orderTotal.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

@@ -18,6 +18,7 @@ import { useMemo } from 'react';
 import AsyncWrapper from '../components/AsyncWrapper.jsx';
 import { fetchWithError } from '../utils/fetchWithError.js';
 import { useState } from 'react';
+import { apiUrl } from '../utils/api.js';
 
 const Home = () => {
   const bestSellers = getBestSellers();
@@ -56,7 +57,7 @@ const Home = () => {
   }
 
   const promises = useMemo(() => [
-    () => fetchWithError(fetch(`http://localhost:3000/homepage`)),
+    () => fetchWithError(fetch(apiUrl('/homepage'))),
   ], []);
 
   return (

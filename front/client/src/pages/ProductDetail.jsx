@@ -10,6 +10,7 @@ import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
 import { useMemo } from 'react';
 import { useFetch } from '../context/FetchContext';
+import { apiUrl } from '../utils/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -56,7 +57,7 @@ const ProductDetail = () => {
   };
 
   const promises = useMemo(() => [
-    () => fetchWithError(fetch(`http://localhost:3000/products/${id}`)),
+    () => fetchWithError(fetch(apiUrl(`/products/${id}`))),
   ], []);
 
   return (
@@ -123,7 +124,7 @@ const ProductDetail = () => {
 
                 <h1 className="text-3xl font-serif text-gray-900 mb-2">{product.name}</h1>
                 {/* Assuming product.price is a number */}
-                <p className="text-2xl font-medium text-gray-900 mb-4">${product.price.toLocaleString()}</p>
+                <p className="text-2xl font-medium text-gray-900 mb-4">Rs. {product.price.toLocaleString()}</p>
 
                 <p className="text-gray-600 mb-6">{product.shortDescription}</p>
 

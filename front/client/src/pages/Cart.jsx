@@ -137,7 +137,7 @@ const Cart = () => {
 
                       {/* Price */}
                       <div className="col-span-2 text-center">
-                        <span>${item.product.price.toLocaleString()}</span>
+                        <span>Rs. {item.product.price.toLocaleString()}</span>
                       </div>
 
                       {/* Quantity */}
@@ -151,7 +151,7 @@ const Cart = () => {
 
                       {/* Total & Remove */}
                       <div className="col-span-2 text-right flex justify-end items-center gap-3">
-                        <span className="font-medium">${(item.product.price * item.quantity).toLocaleString()}</span>
+                        <span className="font-medium">Rs. {(item.product.price * item.quantity).toLocaleString()}</span>
                         <button
                           onClick={() => handleRemoveItem(item.id)}
                           className="text-red-500 p-1 hover:bg-red-50 rounded"
@@ -182,7 +182,7 @@ const Cart = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">${getTotalPrice().toLocaleString()}</span>
+                    <span className="font-medium">Rs. {getTotalPrice().toLocaleString()}</span>
                   </div>
 
                   {/* Uncomment if you want */}
@@ -198,14 +198,14 @@ const Cart = () => {
                   <div className="border-t border-gray-200 pt-3 mt-3">
                     <div className="flex justify-between">
                       <span className="font-medium text-lg">Estimated Total</span>
-                      <span className="font-medium text-lg">${getTotalPrice().toLocaleString()}</span>
+                      <span className="font-medium text-lg">Rs. {getTotalPrice().toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
 
                 {getTotalPrice() > serverParams.payhereMaxAmount ? (
                   <div className="mt-4 text-center text-sm text-red-600">
-                    The total amount exceeds <b>Rs. 200,000.</b> You cannot place the order online—please visit our shop to complete the purchase.
+                    The total amount exceeds <b>Rs. {getTotalPrice()}.</b> You cannot place the order online—please visit our shop to complete the purchase.
                   </div>
                 ) : (
                   <Button

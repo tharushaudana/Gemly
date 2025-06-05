@@ -138,7 +138,7 @@ const Wishlist = () => {
                     {/* Price */}
                     <div className="col-span-2 text-center">
                       {/* Accessing property and using toLocaleString */}
-                      <span>${item.price.toLocaleString()}</span>
+                      <span>Rs. {item.price.toLocaleString()}</span>
                     </div>
 
 

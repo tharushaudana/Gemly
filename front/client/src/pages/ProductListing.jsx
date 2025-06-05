@@ -11,6 +11,7 @@ import { useCallback } from 'react';
 import { useMemo } from 'react';
 import Pagination from '../components/ui/Pagination';
 import { useAuth } from '../context/AuthContext';
+import { apiUrl } from '../utils/api';
 
 const ProductListing = () => {
   const { token } = useAuth(); 
@@ -81,12 +82,12 @@ const ProductListing = () => {
   }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, currentPage]);
 
   const promises = useMemo(() => [
-    () => fetchWithError(fetch(`http://localhost:3000/filters`, {
+    () => fetchWithError(fetch(apiUrl('/filters'), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })),
-    () => fetchWithError(fetch(`http://localhost:3000/products?${getQuery()}`)),
+    () => fetchWithError(fetch(apiUrl(`/products?${getQuery()}`))),
   ], [getQuery, token]);
 
   return (

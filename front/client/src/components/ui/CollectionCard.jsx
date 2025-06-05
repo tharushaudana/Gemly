@@ -22,8 +22,8 @@ const CollectionCard = ({ collection }) => {
         <p className="text-sm mb-4">{collection._count.products} Products</p>
 
         {/* Link to collection details page */}
-        <Link to={`/collection/${collection.id}`}>
-          <Button variant="primary" size="sm" className="bg-black hover:bg-white text-[#1A237E]">
+        <Link to={`/products?collection=${collection.name}`}>
+          <Button variant="primary2" size="sm" className="bg-white">
             View Collection
           </Button>
         </Link>

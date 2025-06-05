@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { fetchWithError } from '../utils/fetchWithError';
 import { useAuth } from './AuthContext';
 import { redirectToLogin } from '../utils/redirectToLogin';
+import { apiUrl } from '../utils/api';
 
 const CartContext = createContext(undefined);
 
@@ -15,7 +16,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, quantity, metalType) => {
     try {
       const result = await fetchWithError(
-        fetch('http://localhost:3000/cart', {
+        fetch(apiUrl('/cart'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (cartItemId) => {
     try {
       await fetchWithError(
-        fetch('http://localhost:3000/cart', {
+        fetch(apiUrl('/cart'), {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -68,9 +69,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Removed type annotations on function parameters
   const updateQuantity = (productId, quantity) => {
-    // Map logic remains the same, relies on item.product.id existing
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.product.id === productId
@@ -80,17 +79,14 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Logic remains the same
   const clearCart = () => {
     setCartItems([]);
   };
 
-  // Logic remains the same, relies on item.quantity existing
   const getTotalItems = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // Logic remains the same, relies on item.product.price and item.quantity existing
   const getTotalPrice = () => {
     return cartItems.reduce(
       (total, item) => total + item.product.price * item.quantity,
@@ -98,7 +94,6 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Logic remains the same, relies on item.product.id existing
   const isInCart = (productId) => {
     return cartItems.some(item => item.product.id === productId);
   };
@@ -121,10 +116,8 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Removed the return type annotation
 export const useCart = () => {
   const context = useContext(CartContext);
-  // The check for undefined context is still a good practice in JS
   if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }

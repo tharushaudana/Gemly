@@ -1,77 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { fetchWithError } from '../utils/fetchWithError';
-// Removed import for types (User, Address, Order) as they are not needed in JS
-
-// Removed interface AuthContextType
-
-// Mock user data - removed type annotation
-const mockUser = {
-  id: 'user-1',
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  addresses: [
-    {
-      id: 'address-1',
-      name: 'Home',
-      street: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'USA',
-      isDefault: true
-    }
-  ]
-};
-
-// Mock orders - removed type annotation
-const mockOrders = [
-  {
-    id: 'order-1',
-    date: '2025-03-15',
-    status: 'delivered',
-    items: [
-      {
-        product: {
-          id: '1',
-          name: 'Diamond Eternity Ring',
-          price: 2499.99,
-          images: ['https://images.pexels.com/photos/9428867/pexels-photo-9428867.jpeg'],
-          category: 'Rings',
-          collection: 'Wedding',
-          metalType: ['White Gold', 'Yellow Gold', 'Rose Gold'],
-          description: 'Our stunning Diamond Eternity Ring features a continuous circle of brilliant-cut diamonds set in precious metal.',
-          shortDescription: 'Brilliant-cut diamonds in a continuous circle of elegance.',
-          isNew: false,
-          isBestSeller: true,
-          availableSizes: ['5', '6', '7', '8', '9']
-        },
-        quantity: 1,
-        metalType: 'White Gold',
-        size: '7'
-      }
-    ],
-    total: 2499.99,
-    shippingAddress: {
-      id: 'address-1',
-      name: 'Home',
-      street: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'USA',
-      isDefault: true
-    },
-    paymentMethod: 'Credit Card'
-  }
-];
+import { apiUrl } from '../utils/api';
 
 const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
 
   const [ serverParams, setServerParams ] = useState({});
 
@@ -79,8 +13,6 @@ export const AuthProvider = ({ children }) => {
     const savedToken = localStorage.getItem('token');
     return savedToken ? savedToken : null;
   });
-
-  const [orders, setOrders] = useState(mockOrders); // Using mock orders
 
   const [isVerifying, setIsVerifying] = useState(true);
 
@@ -94,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const result = await fetchWithError(
-      fetch('http://localhost:3000/auth/login',
+      fetch(apiUrl('/auth/login'),
         {
           method: 'POST',
           headers: {
@@ -117,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, phone, password) => {
     await fetchWithError(
-      fetch('http://localhost:3000/auth/register',
+      fetch(apiUrl('/auth/register'),
         {
           method: 'POST',
           headers: {
@@ -143,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (updates) => {
     try {
       await fetchWithError(
-        fetch('http://localhost:3000/customer/update_profile',
+        fetch(apiUrl('/customer/update_profile'),
           {
             method: 'POST',
             headers: {
@@ -167,7 +99,7 @@ export const AuthProvider = ({ children }) => {
   const addAddress = async (address) => {
     try {
       const addr = await fetchWithError(
-        fetch('http://localhost:3000/customer/add_address',
+        fetch(apiUrl('/customer/add_address'),
           {
             method: 'POST',
             headers: {
@@ -193,7 +125,7 @@ export const AuthProvider = ({ children }) => {
   const updateAddress = async (address) => {
     try {
       const updatedAddr = await fetchWithError(
-        fetch('http://localhost:3000/customer/update_address',
+        fetch(apiUrl('/customer/update_address'),
           {
             method: 'POST',
             headers: {
@@ -222,7 +154,7 @@ export const AuthProvider = ({ children }) => {
   const removeAddress = async (addressId) => {
     try {
       await fetchWithError(
-        fetch('http://localhost:3000/customer/delete_address',
+        fetch(apiUrl('/customer/delete_address'),
           {
             method: 'DELETE',
             headers: {
@@ -256,7 +188,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await fetch('http://localhost:3000/auth/verify', {
+        const response = await fetch(apiUrl('/auth/verify'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -299,7 +231,6 @@ export const AuthProvider = ({ children }) => {
         addAddress,
         updateAddress,
         removeAddress,
-        orders // Providing mock orders
       }}
     >
       {isVerifying ? (

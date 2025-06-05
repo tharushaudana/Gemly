@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { fetchWithError } from '../utils/fetchWithError';
+import { apiUrl } from '../utils/api';
 
 const WishlistContext = createContext(undefined);
 
@@ -14,7 +15,7 @@ export const WishlistProvider = ({ children }) => {
   const addToWishlist = async (product) => {
     try {
       const result = await fetchWithError(
-        fetch('http://localhost:3000/wishlist', {
+        fetch(apiUrl('/wishlist'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ export const WishlistProvider = ({ children }) => {
   const removeFromWishlist = async (productId) => {
     try {
       await fetchWithError(
-        fetch('http://localhost:3000/wishlist', {
+        fetch(apiUrl('/wishlist'), {
           method: 'DELETE',
           headers: {
         'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export const WishlistProvider = ({ children }) => {
   const clearWishlist = async () => {
     try {
       await fetchWithError(
-        fetch('http://localhost:3000/wishlist/clear', {
+        fetch(apiUrl('/wishlist/clear'), {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
