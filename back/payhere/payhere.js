@@ -10,7 +10,7 @@ const sandbox = process.env.PAYHERE_SANDBOX === 'true' ? true : false;
 const maxAmount = parseFloat(process.env.PAYHERE_MAX_AMOUNT);
 
 function createPayhereHash(orderId, amount) {
-    const formattedAmount = parseFloat(amount).toFixed(2); 
+    const formattedAmount = parseFloat(amount).toFixed(2);
 
     const hash = crypto.createHash('md5').update(
         merchantId +
@@ -23,8 +23,28 @@ function createPayhereHash(orderId, amount) {
     return { hash, formattedAmount };
 }
 
+function verifyReceivedNotify(body) {
+    const { merchant_id, order_id, payhere_amount, payhere_currency, status_code, md5sig } = body;
+
+    if (merchant_id !== merchantId) {
+        return false;
+    }
+
+    const expectedHash = crypto.createHash('md5').update(
+        merchantId +
+        order_id +
+        payhere_amount +
+        payhere_currency +
+        status_code +
+        crypto.createHash('md5').update(secret).digest('hex').toUpperCase()
+    ).digest('hex').toUpperCase();
+
+    return expectedHash === md5sig;
+}
+
 module.exports = {
     createPayhereHash,
+    verifyReceivedNotify,
     merchantId,
     secret,
     currency,

@@ -36,6 +36,18 @@ async function createCheckoutSession(customer, addressId) {
 
     const generatedOrderId = `GM-${Date.now()}`;
 
+    // Create order in the database
+    await prisma.orders.create({
+        data: {
+            id: generatedOrderId,
+            customerId: customer.id,
+            totalAmount: totalAmount,
+            cartItems,
+            address,
+        },
+    });
+
+    // Create Payhere hash
     const { hash, formattedAmount } = createPayhereHash(generatedOrderId, totalAmount);
 
     // Payhere payment request object
