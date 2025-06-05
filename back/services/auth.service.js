@@ -51,6 +51,11 @@ async function getCustomerById(id) {
             where: { id },
             include: {
                 addresses: true,
+                cartItems: {
+                    include: {
+                        product: true,
+                    },
+                },
             }
         });
 
