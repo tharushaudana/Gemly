@@ -45,7 +45,7 @@ const Checkout = () => {
 
   const openPayherePopup = (paymentRequest) => {
     window.payhere.onCompleted = (orderId) => {
-      console.log('Payment completed. OrderID:', orderId);
+      location.href = `/order-confirmation/${orderId}`;
     };
 
     window.payhere.onDismissed = () => {
@@ -54,6 +54,7 @@ const Checkout = () => {
 
     window.payhere.onError = (error) => {
       console.error('Payment error:', error);
+      setErrors({ checkout: 'An error occurred while processing your payment. Please try again.' });
     };
 
     // Start payment
