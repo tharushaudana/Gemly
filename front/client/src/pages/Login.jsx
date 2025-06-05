@@ -24,7 +24,7 @@ const Login = () => {
 
   // Get the redirect path from location state
   const searchParams = new URLSearchParams(location.search);
-  const redirectTo = searchParams.get("redirectTo") || "/"; // fallback if missing
+  const redirectTo = searchParams.get("redirectTo") || "/products"; // fallback if missing
 
   const handleSubmit = async (e) => {
     e.preventDefault();

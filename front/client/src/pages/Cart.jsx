@@ -6,10 +6,12 @@ import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { redirectToLogin } from '../utils/redirectToLogin';
+import { useFetch } from '../context/FetchContext';
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const { isAuthenticated } = useAuth();
+  const { callFetch } = useFetch();
 
   const navigate = useNavigate();
 
@@ -21,16 +23,14 @@ const Cart = () => {
     updateQuantity(productId, newQuantity);
   };
 
-  const handleRemoveItem = (cartItemId) => {
-    removeFromCart(cartItemId);
+  const handleRemoveItem = async (cartItemId) => {
+    await callFetch(removeFromCart(cartItemId));
   };
 
   const handleCheckout = () => {
-    if (isAuthenticated) {
-      navigate('/checkout');
-    } else {
-      navigate('/login', { state: { redirectTo: '/checkout' } });
-    }
+    // navigate('/checkout');
+    // Used window.location.href to resync with server
+    window.location.href = '/checkout';
   };
 
   return (
@@ -89,22 +89,9 @@ const Cart = () => {
                             <span className="font-medium">${item.product.price.toLocaleString()}</span>
 
                             <div className="flex items-center">
-                              <button
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                                className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
-                                disabled={item.quantity <= 1} 
-                              >
-                                -
-                              </button>
-                              <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300">
+                              <span className="w-10 h-8 flex items-center justify-center border border-gray-300">
                                 {item.quantity}
                               </span>
-                              <button
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                                className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r"
-                              >
-                                +
-                              </button>
                             </div>
                           </div>
 
@@ -156,22 +143,9 @@ const Cart = () => {
                       {/* Quantity */}
                       <div className="col-span-2">
                         <div className="flex items-center justify-center">
-                          <button
-                            onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                            className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
-                            disabled={item.quantity <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300">
+                          <span className="w-10 h-8 flex items-center justify-center border border-gray-300">
                             {item.quantity}
                           </span>
-                          <button
-                            onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                            className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r"
-                          >
-                            +
-                          </button>
                         </div>
                       </div>
 
@@ -210,14 +184,16 @@ const Cart = () => {
                     <span className="text-gray-600">Subtotal</span>
                     <span className="font-medium">${getTotalPrice().toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
+
+                  {/* Uncomment if you want */}
+                  {/* <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
                     <span className="font-medium">Calculated at checkout</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Taxes</span>
                     <span className="font-medium">Calculated at checkout</span>
-                  </div>
+                  </div> */}
 
                   <div className="border-t border-gray-200 pt-3 mt-3">
                     <div className="flex justify-between">
@@ -236,9 +212,10 @@ const Cart = () => {
                   Proceed to Checkout
                 </Button>
 
-                <div className="mt-4 text-center text-sm text-gray-500">
+                {/* Uncomment if you want */}
+                {/* <div className="mt-4 text-center text-sm text-gray-500">
                   Shipping, taxes, and discounts will be calculated at checkout.
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

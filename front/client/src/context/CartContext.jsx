@@ -40,7 +40,7 @@ export const CartProvider = ({ children }) => {
           updatedItems[existingItemIndex].quantity += quantity;
           return updatedItems;
         } else {
-          return [...prevItems, { product, quantity, metalType }];
+          return [...prevItems, { id: result.id, product, quantity, metalType }];
         }
       });
     } catch (error) {
@@ -49,10 +49,24 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Removed type annotation on function parameter
-  const removeFromCart = (productId) => {
-    // Filter logic remains the same, relies on item.product.id existing
-    setCartItems(prevItems => prevItems.filter(item => item.product.id !== productId));
+  const removeFromCart = async (cartItemId) => {
+    try {
+      await fetchWithError(
+        fetch('http://localhost:3000/cart', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ cartItemId }),
+        })
+      );
+
+      setCartItems(prevItems => prevItems.filter(item => item.id !== cartItemId));
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      throw new Error('Failed to remove item from cart');
+    }
   };
 
   // Removed type annotations on function parameters
