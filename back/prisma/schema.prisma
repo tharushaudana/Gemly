@@ -96,6 +96,7 @@ model Orders {
   address       Json
   totalAmount   Float
   paymentStatus String    @default("notpaid")
+  paymentMd5Sig String    @default("")
   customerId    Int
   customer      Customers @relation(fields: [customerId], references: [id])
 }
