@@ -99,4 +99,5 @@ model Orders {
   paymentMd5Sig String    @default("")
   customerId    Int
   customer      Customers @relation(fields: [customerId], references: [id])
+  createdAt     DateTime  @default(now())
 }
