@@ -1,5 +1,5 @@
 const { PrismaClient } = require('../generated/prisma');
-const { createPayhereHash, merchantId, currency, returnUrl, cancelUrl, notifyUrl, sandbox } = require('../payhere/payhere')
+const { createPayhereHash, merchantId, currency, returnUrl, cancelUrl, notifyUrl, sandbox, maxAmount } = require('../payhere/payhere')
 const prisma = new PrismaClient();
 
 async function createCheckoutSession(customer, addressId) {
@@ -29,7 +29,10 @@ async function createCheckoutSession(customer, addressId) {
         totalAmount += productPrice * item.quantity;
     }
 
-    totalAmount = 50000;
+    // Check if total amount exceeds the maximum allowed amount
+    if (totalAmount > maxAmount) {
+        throw new Error(`Total amount exceeds the maximum allowed limit of ${maxAmount}`);
+    }
 
     const generatedOrderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 

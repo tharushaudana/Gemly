@@ -41,12 +41,17 @@ exports.loginCustomer = async (req, res) => {
 };
 
 exports.verifyToken = async (req, res) => {
-    const user = req.user;
+    const user = req.user;    
 
     try {
         if (user.type === 'customer') {
             const customer = await getCustomerById(user.id);
-            return res.status(200).json({ ...customer });
+            return res.status(200).json({ 
+                customer: customer,
+                serverParams: {
+                    payhereMaxAmount: parseFloat(process.env.PAYHERE_MAX_AMOUNT),
+                } 
+            });
         } else {
             return res.status(400).json({ error: 'Invalid user type' });
         }

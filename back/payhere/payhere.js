@@ -32,4 +32,5 @@ module.exports = {
     cancelUrl,
     notifyUrl,
     sandbox,
+    maxAmount,
 };
