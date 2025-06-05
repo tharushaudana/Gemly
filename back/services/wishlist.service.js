@@ -35,9 +35,17 @@ async function addToWishlist(customerId, productId) {
 }
 
 async function removeFromWishlist(customerId, productId) {
-    return await prisma.wishlistItems.delete({
+    return await prisma.wishlistItems.deleteMany({
         where: {
             productId: productId,
+            customerId,
+        },
+    });
+}
+
+async function clearWishlist(customerId) {
+    return await prisma.wishlistItems.deleteMany({
+        where: {
             customerId,
         },
     });
@@ -47,4 +55,5 @@ module.exports = {
     getWishlistByCustomerId,
     addToWishlist,
     removeFromWishlist,
+    clearWishlist,
 };

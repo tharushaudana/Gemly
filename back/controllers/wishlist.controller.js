@@ -1,4 +1,4 @@
-const { addToWishlist, getWishlistByCustomerId, removeFromWishlist } = require('../services/wishlist.service');
+const { addToWishlist, getWishlistByCustomerId, removeFromWishlist, clearWishlist } = require('../services/wishlist.service');
 
 exports.getWishlist = async (req, res) => {
     const customerId = req.user.id;
@@ -16,8 +16,8 @@ exports.addToWishlist = async (req, res) => {
     const { productId } = req.body;
     const customerId = req.user.id;
 
-    if (!productId || !metalType) {
-        return res.status(400).json({ error: 'Product ID and metal type are required' });
+    if (!productId) {
+        return res.status(400).json({ error: 'Product ID is required' });
     }
 
     try {
@@ -43,5 +43,17 @@ exports.removeFromWishlist = async (req, res) => {
     } catch (error) {
         console.error('Error removing from wishlist:', error);
         res.status(500).json({ error: 'Failed to remove item from wishlist' });
+    }
+}
+
+exports.clearWishlist = async (req, res) => {
+    const customerId = req.user.id;
+
+    try {
+        await clearWishlist(customerId);
+        res.status(200).json({ message: 'Wishlist cleared successfully' });
+    } catch (error) {
+        console.error('Error clearing wishlist:', error);
+        res.status(500).json({ error: 'Failed to clear wishlist' });
     }
 }
