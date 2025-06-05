@@ -19,10 +19,10 @@ const OrderConfirmation = () => {
   // If user manually navigated to this page without an order, redirect to home
   // useEffect usage is the same in JS
   useEffect(() => {
-    if (!location.state?.orderId) {
-      // Using navigate with replace: true is common for redirects
-      navigate('/', { replace: true });
-    }
+    // if (!location.state?.orderId) {
+    //   // Using navigate with replace: true is common for redirects
+    //   navigate('/', { replace: true });
+    // }
   }, [location.state, navigate]); // Dependencies remain the same
 
   // Generate a random delivery date (5-7 days from now)

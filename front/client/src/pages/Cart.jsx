@@ -203,19 +203,21 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  onClick={handleCheckout}
-                >
-                  Proceed to Checkout
-                </Button>
+                {getTotalPrice() > 200000 ? (
+                  <div className="mt-4 text-center text-sm text-red-600">
+                    The total amount exceeds <b>Rs. 200,000.</b> You cannot place the order online—please visit our shop to complete the purchase.
+                  </div>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={handleCheckout}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                )}
 
-                {/* Uncomment if you want */}
-                {/* <div className="mt-4 text-center text-sm text-gray-500">
-                  Shipping, taxes, and discounts will be calculated at checkout.
-                </div> */}
               </div>
             </div>
           </div>
