@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
+const homepageRoutes = require('./routes/homepage.route');
 const authRoutes = require('./routes/auth.route');
 const productRoutes = require('./routes/product.route');
 const filterRoutes = require('./routes/filters.route');
@@ -20,6 +21,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use('/homepage', homepageRoutes);
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
