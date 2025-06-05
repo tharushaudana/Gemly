@@ -22,7 +22,7 @@ model Customers {
   password      String
   addresses     CustomerAddresses[]
   cartItems     CartItems[]
-  WishlistItems WishlistItems[]
+  wishlistItems WishlistItems[]
 }
 
 model CustomerAddresses {
@@ -52,8 +52,8 @@ model Products {
   shortDescription String          @db.Text
   isNew            Boolean
   isBestSeller     Boolean
-  CartItems        CartItems[]
-  WishlistItems    WishlistItems[]
+  cartItems        CartItems[]
+  wishlistItems    WishlistItems[]
 }
 
 model Collections {

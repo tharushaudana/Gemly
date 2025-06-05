@@ -56,6 +56,11 @@ async function getCustomerById(id) {
                         product: true,
                     },
                 },
+                wishlistItems: {
+                    include: {
+                        product: true,
+                    },
+                },
             }
         });
 
