@@ -8,6 +8,7 @@ const filterRoutes = require('./routes/filters.route');
 const customerRoutes = require('./routes/customer.route');
 const cartRoutes = require('./routes/cart.route');
 const wishlistRoutes = require('./routes/wishlist.route');
+const checkoutRoutes = require('./routes/checkout.route');
 
 require('dotenv').config();
 
@@ -24,5 +25,6 @@ app.use('/filters', filterRoutes);
 app.use('/customer', customerRoutes);
 app.use('/cart', cartRoutes);
 app.use('/wishlist', wishlistRoutes);
+app.use('/checkout', checkoutRoutes);
 
 module.exports = app;

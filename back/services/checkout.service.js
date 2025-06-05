@@ -1,0 +1,71 @@
+const { PrismaClient } = require('../generated/prisma');
+const { createPayhereHash, merchantId, currency, returnUrl, cancelUrl, notifyUrl, sandbox } = require('../payhere/payhere')
+const prisma = new PrismaClient();
+
+async function createCheckoutSession(customer, addressId) {
+    // Validate address
+    const address = await prisma.customerAddresses.findUnique({
+        where: { id: addressId },
+    });
+
+    if (!address || address.customerId !== customer.id) {
+        throw new Error('Address not found or does not belong to the customer');
+    }
+
+    // Retrieve the customer's cart items
+    const cartItems = await prisma.cartItems.findMany({
+        where: { customerId: customer.id },
+        include: { product: true },
+    });
+
+    if (cartItems.length === 0) {
+        throw new Error('Cart is empty. Nothing to checkout.');
+    }
+
+    // Calculate total amount
+    let totalAmount = 0;
+    for (const item of cartItems) {
+        const productPrice = item.product.price; 
+        totalAmount += productPrice * item.quantity;
+    }
+
+    totalAmount = 50000;
+
+    const generatedOrderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const { hash, formattedAmount } = createPayhereHash(generatedOrderId, totalAmount);
+
+    // Payhere payment request object
+    const paymentRequest = {
+        sandbox: sandbox,
+        merchant_id: merchantId,
+        return_url: returnUrl,
+        cancel_url: cancelUrl,
+        notify_url: notifyUrl,
+        order_id: generatedOrderId,
+        items: 'Cart Items',
+        amount: formattedAmount,
+        currency: currency,
+        hash: hash,
+        first_name: customer.name,
+        last_name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+        address: `${address.name}, ${address.street}, ${address.city}, ${address.country}`,
+        city: address.city,
+        country: address.country,
+        delivery_address: `${address.name}, ${address.street}, ${address.city}, ${address.country}`,
+        delivery_city: address.city,
+        delivery_country: address.country,
+        custom_1: '',
+        custom_2: '',
+    };
+
+    return { 
+        paymentRequest,
+    };
+}
+
+module.exports = {
+    createCheckoutSession,
+};
