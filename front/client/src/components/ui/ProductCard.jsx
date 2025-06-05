@@ -1,26 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
-// Removed: import { Product } from '../../types'; // Not needed in JS
-import { useWishlist } from '../../context/WishlistContext'; // Assumes this is a JS/TS file exporting the hook
-import Button from './Button'; // Assumes this is a JS/TS file exporting the component
+import { useWishlist } from '../../context/WishlistContext'; 
+import Button from './Button'; 
+import { useFetch } from '../../context/FetchContext';
 
-// Removed interface ProductCardProps { product: Product; } // Not needed in JS
-
-// Removed type annotation: React.FC<ProductCardProps>
-const ProductCard = ({ product }) => { // Removed type annotation from props
+const ProductCard = ({ product }) => { 
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const { callFetch } = useFetch();
   const isWishlisted = isInWishlist(product.id);
 
-  // Removed type annotation: (e: React.MouseEvent)
-  const handleWishlistToggle = (e) => {
+  const handleWishlistToggle = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (isWishlisted) {
-      removeFromWishlist(product.id);
+      await callFetch(removeFromWishlist(product.id));
     } else {
-      addToWishlist(product);
+      await callFetch(addToWishlist(product));
     }
   };
 

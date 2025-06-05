@@ -1,35 +1,38 @@
-import React from 'react'; // React.FC type removed, so no need to import React specifically for that, but needed for JSX
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
 
 import Button from '../components/ui/Button';
-// Assuming these context hooks are correctly implemented in JavaScript or compiled from TypeScript
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { redirectToLogin } from '../utils/redirectToLogin';
+import { useFetch } from '../context/FetchContext';
 
-// Removed React.FC type annotation
 const Wishlist = () => {
-  // No type annotations needed for destructured values from hooks
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
   const { addToCart, isInCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { callFetch } = useFetch();
 
-  // Removed type annotation for productId
-  const handleAddToCart = (productId) => {
-    // The find method will return the object if found, or undefined.
-    // JavaScript doesn't need the explicit Product type here, it relies on runtime value.
+  if (!isAuthenticated) {
+    redirectToLogin();
+  }
+
+  const handleAddToCart = async (productId) => {
     const product = wishlistItems.find(item => item.id === productId);
     if (product) {
-      // We assume product has the properties: metalType, availableSizes, id, name, price etc.
-      // Accessing array elements [0] and properties like .metalType is standard JS.
-      addToCart(product, 1, product.metalType[0], product.availableSizes[0]);
+      await callFetch(addToCart(product, 1, product.metalType[0]));
     }
   };
 
-  // Removed type annotation for productId
-  const handleRemoveItem = (productId) => {
-    // Call the hook function directly
-    removeFromWishlist(productId);
+  const handleRemoveItem = async (productId) => {
+    await callFetch(removeFromWishlist(productId));
   };
+
+  const handleClearWishlist = async () => {
+    await callFetch(clearWishlist());
+  }
 
   return (
     <div className="pt-24 pb-16">
@@ -85,18 +88,11 @@ const Wishlist = () => {
                         <div className="font-medium mt-2">${item.price.toLocaleString()}</div>
 
                         <div className="flex gap-2 mt-3">
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            // Calling function with item.id
-                            onClick={() => handleAddToCart(item.id)}
-                            // Calling function with item.id
-                            disabled={isInCart(item.id)}
-                            className="flex-grow"
-                          >
-                            {/* Calling function with item.id */}
-                            {isInCart(item.id) ? 'Added to Cart' : 'Add to Cart'}
-                          </Button>
+                          {isInCart(item.id) && (
+                            <span className="px-2 py-1 text-xs font-medium text-white bg-[#D4AF37] rounded flex items-center">
+                              Added to Cart
+                            </span>
+                          )}
 
                           <Button
                             variant="outline"
@@ -119,7 +115,7 @@ const Wishlist = () => {
                     <div className="col-span-6">
                       <div className="flex items-center gap-4">
                         <div className="w-20 h-20 flex-shrink-0">
-                           {/* Accessing array element and object property */}
+                          {/* Accessing array element and object property */}
                           <img
                             src={item.images[0]}
                             alt={item.name}
@@ -145,19 +141,13 @@ const Wishlist = () => {
                       <span>${item.price.toLocaleString()}</span>
                     </div>
 
-                    {/* Actions */}
+
                     <div className="col-span-4 text-right flex justify-end items-center gap-3">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        // Calling function with item.id
-                        onClick={() => handleAddToCart(item.id)}
-                        // Calling function with item.id
-                        disabled={isInCart(item.id)}
-                      >
-                        {/* Calling function with item.id */}
-                        {isInCart(item.id) ? 'Added to Cart' : 'Add to Cart'}
-                      </Button>
+                      {isInCart(item.id) && (
+                        <span className="px-2 py-1 text-xs font-medium text-white bg-[#D4AF37] rounded flex items-center">
+                          Added to Cart
+                        </span>
+                      )}
 
                       <Button
                         variant="outline"
@@ -182,7 +172,7 @@ const Wishlist = () => {
               <Button
                 variant="outline"
                 // Calling the clearWishlist function from the hook
-                onClick={() => clearWishlist()}
+                onClick={handleClearWishlist}
                 className="text-gray-700"
               >
                 Clear Wishlist

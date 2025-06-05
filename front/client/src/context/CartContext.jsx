@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
   const { token, user } = useAuth();
 
   const [cartItems, setCartItems] = useState(() => {
-    // const savedCart = localStorage.getItem('cart');
     return user ? user.cartItems : [];
   });
 

@@ -4,7 +4,6 @@ import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 
 import ProductCard from '../components/ui/ProductCard';
 import Button from '../components/ui/Button';
-// Assuming getFilteredProducts and products are exported from a JS/TS file
 import { getFilteredProducts, products } from '../data/products';
 import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
@@ -13,28 +12,18 @@ import { useMemo } from 'react';
 import Pagination from '../components/ui/Pagination';
 import { useAuth } from '../context/AuthContext';
 
-// No need to import the Product type in JavaScript
-
 const ProductListing = () => {
   const { token } = useAuth(); 
 
   const [searchParams, setSearchParams] = useSearchParams();
-  // Removed type annotation <Product[]>
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // Filter states - removed type annotations
   const [selectedCollection, setSelectedCollection] = useState(searchParams.get('collection') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [selectedMetalType, setSelectedMetalType] = useState(searchParams.get('metal') || '');
-  // Removed type annotation <[number, number]>
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [sortOption, setSortOption] = useState(searchParams.get('sort') || 'newest');
-
-  // Categories and metal types - logic remains the same
-  const categories = Array.from(new Set(products.map(p => p.category)));
-  const collections = Array.from(new Set(products.map(p => p.collection)));
-  const metalTypes = Array.from(new Set(products.flatMap(p => p.metalType)));
 
   // Filter data
   const [filterData, setFilterData] = useState(null);
@@ -43,7 +32,6 @@ const ProductListing = () => {
   const [pagination, setPagination] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Update URL params when filters change - logic remains the same
   useEffect(() => {
     const params = new URLSearchParams();
 
