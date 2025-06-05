@@ -39,7 +39,8 @@ const Login = () => {
 
     try {
       await callFetch(login(email, password));
-      navigate(redirectTo);
+      // navigate(redirectTo);
+      window.location.href = redirectTo;
     } catch (err) {
       console.error("Login error:", err);
       setError('An error occurred during login');

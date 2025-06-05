@@ -135,6 +135,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     clearUserData();
+    window.location.href = '/login';
   };
 
   const updateProfile = async (updates) => {
