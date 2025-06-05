@@ -4,68 +4,39 @@ import { ChevronRight, Minus, Plus, Heart, ShoppingBag, Check } from 'lucide-rea
 
 import Button from '../components/ui/Button';
 import ProductCard from '../components/ui/ProductCard';
-// Assuming getProductById and getRelatedProducts are exported from a JS/TS file
-import { getProductById, getRelatedProducts } from '../data/products';
-// Assuming useCart and useWishlist are standard React hooks from JS/TS context files
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
 import { useMemo } from 'react';
+import { useFetch } from '../context/FetchContext';
 
-// Remove the React.FC type annotation
 const ProductDetail = () => {
-  // Remove the type assertion <{ id: string }>
   const { id } = useParams();
   const navigate = useNavigate();
-  // Hook usage is the same in JS
   const { addToCart, isInCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { callFetch } = useFetch();
 
-  // The logic for fetching product data remains the same
-  // const product = id ? getProductById(id) : null;
   const relatedProducts = [];
 
   const [product, setProduct] = useState(null);
 
-  // Remove type annotations from useState calls
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  // Optional chaining is valid in JS
   const [selectedMetalType, setSelectedMetalType] = useState(product?.metalType[0] || '');
   const [addedToCart, setAddedToCart] = useState(false);
-
-  // Handle case where product is not found - JSX is the same
-  // if (!product) {
-  //   return (
-  //     <div className="pt-24 pb-16">
-  //       <div className="container mx-auto px-4">
-  //         <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-  //           <h1 className="text-2xl font-medium mb-4">Product Not Found</h1>
-  //           <p className="text-gray-600 mb-6">
-  //             The product you're looking for doesn't exist or has been removed.
-  //           </p>
-  //           <Button variant="primary" onClick={() => navigate('/products')}>
-  //             Back to Products
-  //           </Button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   // Logic to check wishlist status remains the same
   // const isProductInWishlist = isInWishlist(product.id);
   const isProductInWishlist = false;
 
-  // Handle quantity change - remove type annotation 'amount: number'
   const handleQuantityChange = (amount) => {
     setQuantity(Math.max(1, quantity + amount));
   };
 
-  // Handle add to cart - logic remains the same
-  const handleAddToCart = () => {
-    addToCart(product, quantity, selectedMetalType, 0);
+  const handleAddToCart = async () => {
+    await callFetch(addToCart(product, quantity, selectedMetalType));
     setAddedToCart(true);
 
     // Reset addedToCart flag after 3 seconds
@@ -74,7 +45,6 @@ const ProductDetail = () => {
     }, 3000);
   };
 
-  // Handle wishlist toggle - logic remains the same
   const handleWishlistToggle = () => {
     if (isProductInWishlist) {
       removeFromWishlist(product.id);
@@ -91,7 +61,6 @@ const ProductDetail = () => {
     () => fetchWithError(fetch(`http://localhost:3000/products/${id}`)),
   ], []);
 
-  // JSX structure remains the same
   return (
     <AsyncWrapper
       promises={promises}

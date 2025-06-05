@@ -1,46 +1,52 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// Type imports are removed in JavaScript
+import { fetchWithError } from '../utils/fetchWithError';
+import { useAuth } from './AuthContext';
+import { redirectToLogin } from '../utils/redirectToLogin';
 
-// No need for the interface CartContextType in JavaScript
-
-// Removed the type argument for createContext
 const CartContext = createContext(undefined);
 
-// Removed the React.FC and children type annotations
 export const CartProvider = ({ children }) => {
-  // Removed type annotation <CartItem[]>
+  const { token, user } = useAuth();
+
   const [cartItems, setCartItems] = useState(() => {
-    // Load cart from localStorage on initial render
-    // JSON.parse will work as long as the stored data is valid JSON
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    // const savedCart = localStorage.getItem('cart');
+    return user ? user.cartItems : [];
   });
 
-  // Save cart to localStorage whenever it changes - logic remains the same
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Removed type annotations on function parameters
-  const addToCart = (product, quantity, metalType, size) => {
-    setCartItems(prevItems => {
-      // The findIndex logic relies on the structure of the objects,
-      // which is fine in JavaScript as long as the data adheres to it.
-      const existingItemIndex = prevItems.findIndex(
-        item => item.product.id === product.id && item.metalType === metalType && item.size === size
+  const addToCart = async (product, quantity, metalType) => {
+    try {
+      const result = await fetchWithError(
+        fetch('http://localhost:3000/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product.id,
+            quantity,
+            metalType,
+          }),
+        })
       );
 
-      if (existingItemIndex !== -1) {
-        // Update quantity if item already exists with same options
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        return updatedItems;
-      } else {
-        // Add new item
-        // Creates a new object with product, quantity, metalType, size properties.
-        return [...prevItems, { product, quantity, metalType, size }];
-      }
-    });
+      setCartItems(prevItems => {
+        const existingItemIndex = prevItems.findIndex(
+          item => item.product.id === product.id && item.metalType === metalType
+        );
+
+        if (existingItemIndex !== -1) {
+          const updatedItems = [...prevItems];
+          updatedItems[existingItemIndex].quantity += quantity;
+          return updatedItems;
+        } else {
+          return [...prevItems, { product, quantity, metalType }];
+        }
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      throw new Error('Failed to add item to cart');
+    }
   };
 
   // Removed type annotation on function parameter

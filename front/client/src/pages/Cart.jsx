@@ -3,34 +3,32 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 
 import Button from '../components/ui/Button';
-// Assuming useCart and useAuth are standard React context hooks exported from JS/TS files
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { redirectToLogin } from '../utils/redirectToLogin';
 
-// Removed the : React.FC type annotation
 const Cart = () => {
-  // Context hooks are used the same way
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useCart();
   const { isAuthenticated } = useAuth();
-  // useNavigate hook is used the same way
+
   const navigate = useNavigate();
 
-  // Removed type annotations for function parameters
+  if (!isAuthenticated) {
+    redirectToLogin();
+  }
+
   const handleQuantityChange = (productId, newQuantity) => {
     updateQuantity(productId, newQuantity);
   };
 
-  // Removed type annotation for function parameter
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+  const handleRemoveItem = (cartItemId) => {
+    removeFromCart(cartItemId);
   };
 
-  // Logic remains the same
   const handleCheckout = () => {
     if (isAuthenticated) {
       navigate('/checkout');
     } else {
-      // State object for navigation is standard react-router-dom
       navigate('/login', { state: { redirectTo: '/checkout' } });
     }
   };
@@ -40,7 +38,6 @@ const Cart = () => {
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-serif text-gray-900 mb-6">Shopping Cart</h1>
 
-        {/* Conditional rendering based on cartItems.length is standard JS */}
         {cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
@@ -62,9 +59,8 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Cart Items - mapping over array is standard JS */}
+                {/* Cart Items  */}
                 {cartItems.map((item) => (
-                  // Key prop syntax is standard React
                   <div key={`${item.product.id}-${item.metalType}-${item.size}`} className="border-b border-gray-200 last:border-0">
                     {/* Mobile Layout */}
                     <div className="md:hidden p-4">
@@ -87,21 +83,16 @@ const Cart = () => {
 
                           <div className="text-sm text-gray-600 mt-1">
                             <span>Metal: {item.metalType}</span>
-                            {/* Conditional rendering based on item.size is standard JS */}
-                            {item.size !== 'One Size' && (
-                              <span className="ml-2">Size: {item.size}</span>
-                            )}
                           </div>
 
                           <div className="flex justify-between items-center mt-2">
-                            {/* toLocaleString() for currency formatting is standard JS */}
                             <span className="font-medium">${item.product.price.toLocaleString()}</span>
 
                             <div className="flex items-center">
                               <button
                                 onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
                                 className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
-                                disabled={item.quantity <= 1} // Disabled prop is standard HTML/React
+                                disabled={item.quantity <= 1} 
                               >
                                 -
                               </button>
@@ -123,11 +114,11 @@ const Cart = () => {
                             </span>
 
                             <button
-                              onClick={() => handleRemoveItem(item.product.id)}
+                              onClick={() => handleRemoveItem(item.id)}
                               className="text-red-500 p-1 hover:bg-red-50 rounded"
-                              aria-label="Remove item" // Aria-label is standard HTML/React
+                              aria-label="Remove item"
                             >
-                              <Trash2 size={18} /> {/* Lucide icon component is standard React */}
+                              <Trash2 size={18} />
                             </button>
                           </div>
                         </div>
@@ -152,9 +143,6 @@ const Cart = () => {
                             </Link>
                             <div className="text-sm text-gray-600 mt-1">
                               <span>Metal: {item.metalType}</span>
-                              {item.size !== 'One Size' && (
-                                <span className="ml-2">Size: {item.size}</span>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -191,7 +179,7 @@ const Cart = () => {
                       <div className="col-span-2 text-right flex justify-end items-center gap-3">
                         <span className="font-medium">${(item.product.price * item.quantity).toLocaleString()}</span>
                         <button
-                          onClick={() => handleRemoveItem(item.product.id)}
+                          onClick={() => handleRemoveItem(item.id)}
                           className="text-red-500 p-1 hover:bg-red-50 rounded"
                           aria-label="Remove item"
                         >
@@ -239,7 +227,6 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Button component and its props are standard React */}
                 <Button
                   variant="primary"
                   size="lg"
