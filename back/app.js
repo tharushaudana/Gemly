@@ -10,6 +10,7 @@ const cartRoutes = require('./routes/cart.route');
 const wishlistRoutes = require('./routes/wishlist.route');
 const checkoutRoutes = require('./routes/checkout.route');
 const payhereRoutes = require('./routes/payhere.route');
+const orderRoutes = require('./routes/order.route');
 
 require('dotenv').config();
 
@@ -27,6 +28,7 @@ app.use('/customer', customerRoutes);
 app.use('/cart', cartRoutes);
 app.use('/wishlist', wishlistRoutes);
 app.use('/checkout', checkoutRoutes);
+app.use('/order', orderRoutes);
 
 app.use('/payhere', payhereRoutes);
 
