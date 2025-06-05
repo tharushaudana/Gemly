@@ -91,7 +91,7 @@ model WishlistItems {
 }
 
 model Orders {
-  id            Int       @id @default(autoincrement())
+  id            String    @id
   cartItems     Json
   address       Json
   totalAmount   Float
