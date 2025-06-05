@@ -44,7 +44,7 @@ const OrderConfirmation = () => {
 
   const promises = useMemo(() => [
     () => fetchWithError(
-      fetch(`http://localhost:3000/order/${orderId}`, {
+      fetch(`http://localhost:3000/orders/${orderId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
