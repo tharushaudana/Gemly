@@ -53,8 +53,17 @@ async function removeFromCart(customerId, cartItemId) {
     });
 }
 
+async function clearCart(customerId) {
+    return await prisma.cartItems.deleteMany({
+        where: {
+            customerId,
+        },
+    });
+}
+
 module.exports = {
     getCartByCustomerId,
     addToCart,
     removeFromCart,
+    clearCart,
 };

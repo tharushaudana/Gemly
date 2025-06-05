@@ -1,5 +1,6 @@
 const { PrismaClient } = require('../generated/prisma');
 const { verifyReceivedNotify } = require('../payhere/payhere');
+const { clearCart } = require('../services/cart.service')
 const prisma = new PrismaClient();
 
 const STATUS_SUCCESS = '2';
@@ -25,6 +26,9 @@ async function handleNotify(body) {
             paymentMd5Sig: md5sig, 
         },
     });
+
+    // Clear the cart for the customer
+    await clearCart(updatedOrder.customerId);
 
     return updatedOrder;
 }
