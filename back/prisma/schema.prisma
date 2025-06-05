@@ -15,45 +15,47 @@ datasource db {
 }
 
 model Customers {
-  id        Int      @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   name      String
-  email     String   @unique
-  phone     String   @unique
+  email     String              @unique
+  phone     String              @unique
   password  String
   addresses CustomerAddresses[]
+  cartItems CartItems[]
 }
 
 model CustomerAddresses {
-  id              Int      @id @default(autoincrement())
-  customerId      Int
-  name            String
-  street          String
-  city            String
-  state           String
-  zip             String
-  country         String   @default("Sri Lanka")
-  isDefault       Boolean
-  customer        Customers @relation(fields: [customerId], references: [id])
+  id         Int       @id @default(autoincrement())
+  customerId Int
+  name       String
+  street     String
+  city       String
+  state      String
+  zip        String
+  country    String    @default("Sri Lanka")
+  isDefault  Boolean
+  customer   Customers @relation(fields: [customerId], references: [id])
 }
 
 model Products {
-  id              Int      @id @default(autoincrement())
-  name            String
-  price           Float
-  images          Json
-  category        Categories @relation(fields: [categoryId], references: [id])
-  categoryId      Int
-  collection      Collections @relation(fields: [collectionId], references: [id])
-  collectionId    Int
-  metalType       Json
-  description     String @db.Text
-  shortDescription String @db.Text
-  isNew           Boolean
-  isBestSeller    Boolean
+  id               Int         @id @default(autoincrement())
+  name             String
+  price            Float
+  images           Json
+  category         Categories  @relation(fields: [categoryId], references: [id])
+  categoryId       Int
+  collection       Collections @relation(fields: [collectionId], references: [id])
+  collectionId     Int
+  metalType        Json
+  description      String      @db.Text
+  shortDescription String      @db.Text
+  isNew            Boolean
+  isBestSeller     Boolean
+  CartItems        CartItems[]
 }
 
 model Collections {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   description String
   image       String
@@ -61,8 +63,18 @@ model Collections {
 }
 
 model Categories {
-  id       Int      @id @default(autoincrement())
+  id       Int        @id @default(autoincrement())
   name     String
   image    String
   products Products[]
+}
+
+model CartItems {
+  id         Int       @id @default(autoincrement())
+  customerId Int
+  productId  Int
+  quantity   Int       @default(1)
+  metalType  String
+  customer   Customers @relation(fields: [customerId], references: [id])
+  product    Products  @relation(fields: [productId], references: [id])
 }
