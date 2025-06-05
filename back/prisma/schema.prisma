@@ -62,6 +62,7 @@ model Collections {
   name        String
   description String
   image       String
+  isFeatured  Boolean   @default(false)
   products    Products[]
 }
 
