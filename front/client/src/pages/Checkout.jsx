@@ -196,11 +196,9 @@ const Checkout = () => {
                       <div className="ml-3 flex-grow">
                         <p className="font-medium text-sm">{item.product.name}</p>
                         {/* Check if metalType or size exist before displaying */}
-                        {(item.metalType || item.size !== 'One Size') && (
+                        {(item.metalType) && (
                           <p className="text-xs text-gray-500">
                             {item.metalType && `${item.metalType}`}
-                            {item.metalType && item.size !== 'One Size' && ' / '}
-                            {item.size !== 'One Size' && `Size ${item.size}`}
                           </p>
                         )}
                         <div className="flex justify-between mt-1">

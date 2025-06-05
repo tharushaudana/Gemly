@@ -34,7 +34,7 @@ async function createCheckoutSession(customer, addressId) {
         throw new Error(`Total amount exceeds the maximum allowed limit of ${maxAmount}`);
     }
 
-    const generatedOrderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const generatedOrderId = `GM-${Date.now()}`;
 
     const { hash, formattedAmount } = createPayhereHash(generatedOrderId, totalAmount);
 
