@@ -73,6 +73,8 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const [ serverParams, setServerParams ] = useState({});
+
   const [token, setToken] = useState(() => {
     const savedToken = localStorage.getItem('token');
     return savedToken ? savedToken : null;
@@ -266,7 +268,8 @@ export const AuthProvider = ({ children }) => {
         }
 
         const data = await response.json();
-        setUser(data);
+        setUser(data.customer);
+        setServerParams(data.serverParams || {});
       } catch (error) {
         console.error('Error verifying token:', error);
         clearUserData();
@@ -286,6 +289,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        serverParams,
         token,
         login,
         register,

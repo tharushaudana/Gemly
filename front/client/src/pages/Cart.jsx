@@ -10,7 +10,7 @@ import { useFetch } from '../context/FetchContext';
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, serverParams } = useAuth();
   const { callFetch } = useFetch();
 
   const navigate = useNavigate();
@@ -203,7 +203,7 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {getTotalPrice() > 200000 ? (
+                {getTotalPrice() > serverParams.payhereMaxAmount ? (
                   <div className="mt-4 text-center text-sm text-red-600">
                     The total amount exceeds <b>Rs. 200,000.</b> You cannot place the order online—please visit our shop to complete the purchase.
                   </div>
