@@ -27,9 +27,7 @@ const ProductDetail = () => {
   const [selectedMetalType, setSelectedMetalType] = useState(product?.metalType[0] || '');
   const [addedToCart, setAddedToCart] = useState(false);
 
-  // Logic to check wishlist status remains the same
-  // const isProductInWishlist = isInWishlist(product.id);
-  const isProductInWishlist = false;
+  const isProductInWishlist =  product ? isInWishlist(product.id) : false;
 
   const handleQuantityChange = (amount) => {
     setQuantity(Math.max(1, quantity + amount));
@@ -45,11 +43,11 @@ const ProductDetail = () => {
     }, 3000);
   };
 
-  const handleWishlistToggle = () => {
+  const handleWishlistToggle = async () => {
     if (isProductInWishlist) {
-      removeFromWishlist(product.id);
+      await callFetch(removeFromWishlist(product.id));
     } else {
-      addToWishlist(product);
+      await callFetch(addToWishlist(product));
     }
   };
 
@@ -133,7 +131,6 @@ const ProductDetail = () => {
                 <div className="mb-6">
                   <h3 className="font-medium mb-2">Metal Type</h3>
                   <div className="flex flex-wrap gap-2">
-                    {/* Assuming product.metalType is an array */}
                     {product.metalType.map(metal => (
                       <button
                         key={metal}
@@ -213,7 +210,6 @@ const ProductDetail = () => {
                   <h3 className="font-medium mb-3">Product Details</h3>
                   <p className="text-gray-600 mb-4">{product.description}</p>
 
-                  {/* Assuming product.category and product.collection exist */}
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
                       <span className="font-medium text-gray-800">Category:</span> {product.category.name}
@@ -231,7 +227,6 @@ const ProductDetail = () => {
               <div>
                 <h2 className="text-2xl font-serif text-gray-900 mb-6">You Might Also Like</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {/* ProductCard component is assumed to work correctly in JS */}
                   {relatedProducts.map(product => (
                     <ProductCard key={product.id} product={product} />
                   ))}
