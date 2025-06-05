@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function getOrders(customerId) {
     const orders = await prisma.orders.findMany({
-        where: { customerId },
+        where: { customerId, paymentStatus: 'paid' },
         orderBy: { createdAt: 'desc' },
         include: {
             customer: true,
@@ -15,7 +15,7 @@ async function getOrders(customerId) {
 
 async function getOrderById(customerId, orderId) {
     const order = await prisma.orders.findUnique({
-        where: { id: orderId, paymentStatus: 'paid' },
+        where: { id: orderId },
         include: {
             customer: true,
         },
