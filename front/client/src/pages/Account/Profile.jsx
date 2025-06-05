@@ -42,12 +42,12 @@ const Profile = () => {
   };
 
   // Handle profile update
-  const handleProfileUpdate = () => {
+  const handleProfileUpdate = async () => {
     if (user) {
-      updateProfile({
+      await callFetch(updateProfile({
         name: profileData.name,
         phone: profileData.phone
-      });
+      }));
       setIsEditingProfile(false);
     }
   };
