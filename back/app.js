@@ -28,7 +28,7 @@ app.use('/customer', customerRoutes);
 app.use('/cart', cartRoutes);
 app.use('/wishlist', wishlistRoutes);
 app.use('/checkout', checkoutRoutes);
-app.use('/order', orderRoutes);
+app.use('/orders', orderRoutes);
 
 app.use('/payhere', payhereRoutes);
 

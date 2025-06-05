@@ -4,6 +4,7 @@ const orderController = require('../controllers/order.controller');
 
 const authMiddleware = require('../middlewares/auth.middleware');
 
+router.get('/', authMiddleware('customer'), orderController.getOrders);
 router.get('/:id', authMiddleware('customer'), orderController.getOrderDetails);
 
 module.exports = router;
