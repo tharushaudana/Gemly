@@ -44,7 +44,17 @@ async function addToCart(customerId, productId, quantity, metalType) {
     });
 }
 
+async function removeFromCart(customerId, cartItemId) {
+    return await prisma.cartItems.delete({
+        where: {
+            id: cartItemId,
+            customerId,
+        },
+    });
+}
+
 module.exports = {
     getCartByCustomerId,
     addToCart,
+    removeFromCart,
 };
