@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Menu, X, ShoppingBag, Heart, User, Search } from 'lucide-react';
-// Assuming these contexts are also converted to JS or are already JS
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
-// Removed type annotation React.FC
 const Navbar = () => {
-  // Removed type annotations on useState calls
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  // Assuming useCart and useAuth hooks return the expected values in JS
+
   const { getTotalItems } = useCart();
   const { isAuthenticated } = useAuth();
 
   const cartItemCount = getTotalItems();
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [location]); // location is a stable object identity wise in react-router-dom v6, but depends on it to react to path changes
+  }, [location]);
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -32,7 +30,7 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -49,9 +47,8 @@ const Navbar = () => {
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
-    // Check if we're about to open the search, then focus
+
     if (!isSearchOpen) {
-      // Use a small delay to allow the input to render before focusing
       setTimeout(() => {
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
@@ -61,16 +58,13 @@ const Navbar = () => {
     }
   };
 
-  // Removed type annotation on the event parameter
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      // Here you would implement search functionality
-      // For now, we'll just close the search
-      console.log("Searching for:", searchTerm); // Optional: Log search term
+      window.location = `/products?search=${encodeURIComponent(searchTerm)}`;
       setIsSearchOpen(false);
-      setSearchTerm('');
-      // TODO: Implement actual navigation/search action
+    } else {
+      window.location = `/products`;
     }
   };
 
@@ -191,7 +185,6 @@ const Navbar = () => {
                       ? 'text-[#D4AF37] bg-[#D4AF37]/10'
                       : 'text-gray-800 hover:text-[#D4AF37] hover:bg-gray-100'}
                   `}
-                  // Close menu when a link is clicked (optional, but common UX)
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}

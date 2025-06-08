@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 
 import ProductCard from '../components/ui/ProductCard';
@@ -14,7 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import { apiUrl } from '../utils/api';
 
 const ProductListing = () => {
-  const { token } = useAuth(); 
+  const { token } = useAuth();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -23,7 +23,6 @@ const ProductListing = () => {
   const [selectedCollection, setSelectedCollection] = useState(searchParams.get('collection') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [selectedMetalType, setSelectedMetalType] = useState(searchParams.get('metal') || '');
-  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [sortOption, setSortOption] = useState(searchParams.get('sort') || 'newest');
 
   // Filter data
@@ -33,6 +32,9 @@ const ProductListing = () => {
   const [pagination, setPagination] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Search text
+  const searchText = searchParams.get("search") || "";
+
   useEffect(() => {
     const params = new URLSearchParams();
 
@@ -41,6 +43,7 @@ const ProductListing = () => {
     if (selectedMetalType) params.set('metal', selectedMetalType);
     if (sortOption) params.set('sort', sortOption);
     if (currentPage) params.set('page', currentPage);
+    if (searchText) params.set('search', searchText);
 
     // { replace: true } is part of react-router-dom v6+ API, valid in JS
     setSearchParams(params, { replace: true });
@@ -63,7 +66,7 @@ const ProductListing = () => {
 
   const handleOnSuccess = (filterData, productData) => {
     console.log('Filters:', filterData);
-    
+
     setFilterData(filterData);
     setFilteredProducts(productData.data);
     setPagination(productData.pagination);
@@ -77,9 +80,10 @@ const ProductListing = () => {
     if (selectedMetalType) query.set('metal', selectedMetalType);
     if (sortOption) query.set('sort', sortOption);
     if (currentPage) query.set('page', currentPage);
+    if (searchText) query.set('search', searchText);
 
     return query.toString();
-  }, [selectedCollection, selectedCategory, selectedMetalType, priceRange, sortOption, currentPage]);
+  }, [selectedCollection, selectedCategory, selectedMetalType, sortOption, currentPage]);
 
   const promises = useMemo(() => [
     () => fetchWithError(fetch(apiUrl('/filters'), {
@@ -103,6 +107,14 @@ const ProductListing = () => {
             <p className="text-gray-600">
               Discover our exquisite selection of fine jewelry pieces, crafted with the utmost attention to detail.
             </p>
+            <br/>
+            {searchText && (
+              <div className="mb-6">
+                <p className="text-sm text-gray-700 italic">
+                  Search results for <span className="font-medium text-black">"{searchText}"</span>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Mobile Filter Button */}
@@ -395,7 +407,7 @@ const ProductListing = () => {
                 <Pagination
                   pagination={pagination}
                   onPageChange={(page) => {
-                    setCurrentPage(page);                    
+                    setCurrentPage(page);
                   }}
                 />
               )}
