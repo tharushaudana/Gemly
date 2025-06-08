@@ -7,6 +7,7 @@ async function getProducts(queryParams) {
         category: categoryName,
         metal: metalTypeName,
         sort,
+        search,
     } = queryParams;
 
     const page = parseInt(queryParams.page, 10) || 1;
@@ -67,6 +68,12 @@ async function getProducts(queryParams) {
     if (metalTypeName) {
         filters.push(`JSON_CONTAINS(metalType, ?)`);
         sqlParams.push(JSON.stringify([metalTypeName]));
+    }
+
+    // Fulltext search on name, description and shortDescription
+    if (search) {
+        filters.push(`MATCH(products.name, products.description, products.shortDescription) AGAINST (? IN NATURAL LANGUAGE MODE)`);
+        sqlParams.push(search);
     }
 
     // Sort clause
