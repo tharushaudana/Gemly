@@ -4,7 +4,6 @@ import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 
 import ProductCard from '../components/ui/ProductCard';
 import Button from '../components/ui/Button';
-import { getFilteredProducts, products } from '../data/products';
 import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
 import { useCallback } from 'react';
