@@ -11,7 +11,7 @@ export const FetchProvider = ({ children }) => {
             const result = await fetchPromise;
             return result;
         } catch (error) {
-            alert(`Fetch error: ${error.message}`);
+            alert(`${error.message}`);
             throw error;
         } finally {
             setIsLoading(false);

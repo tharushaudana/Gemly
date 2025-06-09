@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(updatedUser));
     } catch (error) {
       console.error('Error updating profile:', error);
-      throw new Error('Failed to update profile');
+      throw new Error(error.message);
     }
   };
 
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error adding address:', error);
-      throw new Error('Failed to add address');
+      throw new Error(error.message);
     }
   };
 
@@ -147,7 +147,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error updating address:', error);
-      throw new Error('Failed to update address');
+      throw new Error(error.message);
     }
   };
 
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error removing address:', error);
-      throw new Error('Failed to remove address');
+      throw new Error(error.message);
     }
   };
 
@@ -196,7 +196,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Token verification failed');
+          throw new Error(error.message);
         }
 
         const data = await response.json();
