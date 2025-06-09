@@ -14,19 +14,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customers {
+model customers {
   id            Int                 @id @default(autoincrement())
   name          String
   email         String              @unique
   phone         String              @unique
   password      String
-  addresses     CustomerAddresses[]
-  cartItems     CartItems[]
-  wishlistItems WishlistItems[]
-  Orders        Orders[]
+  addresses     customerAddresses[]
+  cartItems     cartItems[]
+  wishlistItems wishlistItems[]
+  Orders        orders[]
 }
 
-model CustomerAddresses {
+model customerAddresses {
   id         Int       @id @default(autoincrement())
   customerId Int
   name       String
@@ -36,62 +36,62 @@ model CustomerAddresses {
   zip        String
   country    String    @default("Sri Lanka")
   isDefault  Boolean
-  customer   Customers @relation(fields: [customerId], references: [id])
+  customer   customers @relation(fields: [customerId], references: [id])
 }
 
-model Products {
+model products {
   id               Int             @id @default(autoincrement())
   name             String
   price            Float
   images           Json
-  category         Categories      @relation(fields: [categoryId], references: [id])
+  category         categories      @relation(fields: [categoryId], references: [id])
   categoryId       Int
-  collection       Collections     @relation(fields: [collectionId], references: [id])
+  collection       collections     @relation(fields: [collectionId], references: [id])
   collectionId     Int
   metalType        Json
   description      String          @db.Text
   shortDescription String          @db.Text
   isNew            Boolean
   isBestSeller     Boolean
-  cartItems        CartItems[]
-  wishlistItems    WishlistItems[]
+  cartItems        cartItems[]
+  wishlistItems    wishlistItems[]
 }
 
-model Collections {
+model collections {
   id          Int        @id @default(autoincrement())
   name        String
   description String
   image       String
   isFeatured  Boolean   @default(false)
-  products    Products[]
+  products    products[]
 }
 
-model Categories {
+model categories {
   id       Int        @id @default(autoincrement())
   name     String
   image    String
-  products Products[]
+  products products[]
 }
 
-model CartItems {
+model cartItems {
   id         Int       @id @default(autoincrement())
   customerId Int
   productId  Int
   quantity   Int       @default(1)
   metalType  String
-  customer   Customers @relation(fields: [customerId], references: [id])
-  product    Products  @relation(fields: [productId], references: [id])
+  customer   customers @relation(fields: [customerId], references: [id])
+  product    products  @relation(fields: [productId], references: [id])
 }
 
-model WishlistItems {
+model wishlistItems {
   id         Int       @id @default(autoincrement())
   customerId Int
   productId  Int
-  customer   Customers @relation(fields: [customerId], references: [id])
-  product    Products  @relation(fields: [productId], references: [id])
+  customer   customers @relation(fields: [customerId], references: [id])
+  product    products  @relation(fields: [productId], references: [id])
 }
 
-model Orders {
+model orders {
   id            String    @id
   cartItems     Json
   address       Json
@@ -99,6 +99,6 @@ model Orders {
   paymentStatus String    @default("notpaid")
   paymentMd5Sig String    @default("")
   customerId    Int
-  customer      Customers @relation(fields: [customerId], references: [id])
+  customer      customers @relation(fields: [customerId], references: [id])
   createdAt     DateTime  @default(now())
 }
