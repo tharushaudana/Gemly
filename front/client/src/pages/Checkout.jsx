@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useFetch } from '../context/FetchContext';
 import { fetchWithError } from '../utils/fetchWithError';
+import { apiUrl } from '../utils/api';
 
 const Checkout = () => {
   const { cartItems, getTotalPrice, clearCart } = useCart();
@@ -63,7 +64,7 @@ const Checkout = () => {
   const createCheckoutSession = async () => {
     try {
       const response = await fetchWithError(
-        fetch('http://localhost:3000/checkout/create-session', {
+        fetch(apiUrl('/checkout/create-session'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
