@@ -205,7 +205,7 @@ const Cart = () => {
 
                 {getTotalPrice() > serverParams.payhereMaxAmount ? (
                   <div className="mt-4 text-center text-sm text-red-600">
-                    The total amount exceeds <b>Rs. {getTotalPrice()}.</b> You cannot place the order online—please visit our shop to complete the purchase.
+                    The total amount exceeds <b>Rs. {serverParams.payhereMaxAmount}.</b> You cannot place the order online—please visit our shop to complete the purchase.
                   </div>
                 ) : (
                   <Button
