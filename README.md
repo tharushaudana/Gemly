@@ -147,7 +147,7 @@ npm run dev
 
 ## 👥 Team & Acknowledgments
 
-This project was proudly built by our team for the **L1-S1 Web Technologies (IN1621)** module:
+This project was proudly built by our team for the **L1-S2 Web Technologies (IN1621)** module:
 
 * Tharusha (me)
 * Yasindu Aiya
