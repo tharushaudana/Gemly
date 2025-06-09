@@ -9,6 +9,7 @@ import { redirectToLogin } from '../utils/redirectToLogin';
 import { useState } from 'react';
 import AsyncWrapper from '../components/AsyncWrapper';
 import { fetchWithError } from '../utils/fetchWithError';
+import { apiUrl } from '../utils/api';
 
 // Removed type annotation : React.FC
 const OrderConfirmation = () => {
@@ -44,7 +45,7 @@ const OrderConfirmation = () => {
 
   const promises = useMemo(() => [
     () => fetchWithError(
-      fetch(`http://localhost:3000/orders/${orderId}`, {
+      fetch(apiUrl(`/orders/${orderId}`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
