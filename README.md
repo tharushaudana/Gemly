@@ -139,9 +139,13 @@ npm run dev
 
 ---
 
-## 🎥 Intro Video
+## 🎥 Demo Video
 
-> *[📽 Watch our intro video here](videos/intro.mp4)*
+<video width="600" controls>
+  <source src="demo/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 
 *(Replace with YouTube or embedded video link if available.)*
 
