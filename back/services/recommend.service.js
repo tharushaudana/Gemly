@@ -4,7 +4,7 @@ const natural = require('natural');
 const prisma = new PrismaClient();
 const TfIdf = natural.TfIdf;
 
-async function getProductsAndPurchasedProductIds(customerId) {
+async function getProductsAndKeyProductIds(customerId) {
     // Fetch all products
     const products = await prisma.products.findMany({
         include: {
@@ -21,15 +21,30 @@ async function getProductsAndPurchasedProductIds(customerId) {
         },
     });
 
-    const purchasedProductIds = [...new Set(purchasedOrders.flatMap(order => order.cartItems.map(item => item.product.id)))];
+    const purchasedProductIds = purchasedOrders.flatMap(order => order.cartItems.map(item => item.product.id));
 
-    return { products, purchasedProductIds };
+    // Fetch wishlist product ids of the customer
+    const wishlist = await prisma.wishlistItems.findMany({
+        where: {
+            customerId: customerId,
+        },
+        include: {
+            product: true, 
+        },
+    });
+
+    const wishlistProductIds = wishlist.map(item => item.product.id);
+
+    // Key product ids (combination of purchasedProductIds, wishlistProductIds)
+    const keyProductIds = [...new Set([...purchasedProductIds, ...wishlistProductIds])];
+
+    return { products, keyProductIds };
 }
 
 async function getRecommendations(customerId, topN = 10) {
     const tfidf = new TfIdf();
 
-    const { products, purchasedProductIds } = await getProductsAndPurchasedProductIds(customerId);
+    const { products, keyProductIds } = await getProductsAndKeyProductIds(customerId);
 
     // Add all product descriptions as documents
     function getCombinedText(product) {
@@ -81,14 +96,14 @@ async function getRecommendations(customerId, topN = 10) {
     // Collect similarities for each product not purchased
     const recommendations = [];
 
-    purchasedProductIds.forEach((id) => {
+    keyProductIds.forEach((id) => {
         const purchasedIndex = products.findIndex(p => p.id === id);
         if (purchasedIndex === -1) return;
 
         const purchasedVec = productVectors[purchasedIndex];
 
         products.forEach((product, idx) => {
-            if (purchasedProductIds.includes(product.id)) return; // skip purchased product
+            if (keyProductIds.includes(product.id)) return; // skip purchased product
 
             const similarity = cosineSimilarity(purchasedVec, productVectors[idx]);
             if (similarity > 0) {
@@ -100,10 +115,20 @@ async function getRecommendations(customerId, topN = 10) {
     // Sort by similarity descending
     recommendations.sort((a, b) => b.similarity - a.similarity);
 
-    // Limit to top N recommendations
-    const topRecommendations = recommendations.slice(0, topN);
+    // Seperate products
+    var recommendedProducts = recommendations.map(r => r.product);
 
-    return topRecommendations;
+    // Limit to top N recommendations
+    recommendedProducts = recommendedProducts.slice(0, topN);
+
+    // convert category, collection into its names
+    recommendedProducts = recommendedProducts.map(product => ({
+        ...product,
+        category: product.category.name,
+        collection: product.collection.name,
+    }));
+
+    return recommendedProducts;
 }
 
 module.exports = {
