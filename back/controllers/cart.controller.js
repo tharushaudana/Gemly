@@ -16,8 +16,12 @@ exports.addToCart = async (req, res) => {
     const { productId, quantity, metalType } = req.body;
     const customerId = req.user.id;
 
-    if (!productId || !quantity || !metalType) {
+    if (!productId || !quantity) {
         return res.status(400).json({ error: 'Product ID, quantity, and metal type are required' });
+    }
+
+    if (!metalType) {
+        return res.status(400).json({ error: 'Please select a metal type' });
     }
 
     try {
