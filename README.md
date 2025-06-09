@@ -139,11 +139,9 @@ npm run dev
 
 ---
 
-## 🎥 Intro Video
+## 🎥 Demo Video
 
-> *[📽 Watch our intro video here](videos/intro.mp4)*
-
-*(Replace with YouTube or embedded video link if available.)*
+> *[📽 Watch Demo video here](demo/demo.mp4)*
 
 ---
 
