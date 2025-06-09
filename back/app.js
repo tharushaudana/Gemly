@@ -12,6 +12,7 @@ const wishlistRoutes = require('./routes/wishlist.route');
 const checkoutRoutes = require('./routes/checkout.route');
 const payhereRoutes = require('./routes/payhere.route');
 const orderRoutes = require('./routes/order.route');
+const recommendRoutes = require('./routes/recommend.route');
 
 require('dotenv').config();
 
@@ -32,6 +33,7 @@ app.use('/cart', cartRoutes);
 app.use('/wishlist', wishlistRoutes);
 app.use('/checkout', checkoutRoutes);
 app.use('/orders', orderRoutes);
+app.use('/recommend', recommendRoutes);
 
 app.use('/payhere', payhereRoutes);
 
