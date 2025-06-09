@@ -123,7 +123,7 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-3 gap-3">
+              {/* <div className="mt-6 grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -142,7 +142,7 @@ const Login = () => {
                 >
                   <Mail size={20} className="text-[#D4AF37]" />
                 </button>
-              </div>
+              </div> */}
             </div>
 
             {/* Signup link */}
