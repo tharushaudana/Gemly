@@ -32,13 +32,20 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
+  var navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Shop', path: '/products' },
-    // { name: 'Collections', path: '/collections' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' }
   ];
+
+  if (isAuthenticated) {
+    // push /foryour after /products
+    const insertIndex = navLinks.findIndex(link => link.path === '/products');
+    if (insertIndex !== -1) {
+      navLinks.splice(insertIndex + 1, 0, { name: 'For You', path: '/foryou' });
+    }
+  }
 
   const navbarClasses = `
     fixed top-0 left-0 right-0 z-50 transition-all duration-300

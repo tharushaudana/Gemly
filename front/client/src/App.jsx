@@ -28,6 +28,7 @@ import Dashboard from './pages/Account/Dashboard';
 import Profile from './pages/Account/Profile';
 import Orders from './pages/Account/Orders';
 import { FetchProvider } from './context/FetchContext';
+import ForYou from './pages/ForYou';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                     {/* Main Pages */}
                     <Route path="/" element={<Home />} />
                     <Route path="/products" element={<ProductListing />} />
+                    <Route path="/foryou" element={<ForYou />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
