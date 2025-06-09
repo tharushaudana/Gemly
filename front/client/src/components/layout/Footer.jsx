@@ -10,9 +10,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-2xl font-serif mb-4">LUXE</h3>
+            <h3 className="text-2xl font-serif mb-4">GEMLY</h3>
             <p className="text-gray-300 mb-4">
-              Crafting timeless jewelry pieces that celebrate life's most precious moments since 1985.
+              Crafting timeless jewelry pieces that celebrate life's most precious moments.
             </p>
             <div className="flex space-x-4">
               <a
@@ -82,23 +82,8 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4">Customer Service</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/shipping" className="text-gray-300 hover:text-white transition-colors">
-                  Shipping & Returns
-                </Link>
-              </li>
-              <li>
                 <Link to="/faq" className="text-gray-300 hover:text-white transition-colors">
                   FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to="/jewelry-care" className="text-gray-300 hover:text-white transition-colors">
-                  Jewelry Care
-                </Link>
-              </li>
-              <li>
-                <Link to="/size-guide" className="text-gray-300 hover:text-white transition-colors">
-                  Size Guide
                 </Link>
               </li>
               <li>
@@ -125,7 +110,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 flex-shrink-0" />
-                <span className="text-gray-300">contact@luxejewelry.com</span>
+                <span className="text-gray-300">contact@gemlyjewelry.com</span>
               </li>
             </ul>
           </div>
@@ -134,7 +119,7 @@ const Footer = () => {
         <hr className="border-white/20 my-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center text-gray-300 text-sm">
-          <p>© {new Date().getFullYear()} LUXE Jewelry. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} GEMLY Jewelry. All rights reserved.</p>
           <div className="mt-4 md:mt-0">
             <ul className="flex space-x-4">
               <li>
@@ -145,11 +130,6 @@ const Footer = () => {
               <li>
                 <Link to="/privacy" className="hover:text-white transition-colors">
                   Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link to="/accessibility" className="hover:text-white transition-colors">
-                  Accessibility
                 </Link>
               </li>
             </ul>

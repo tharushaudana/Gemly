@@ -1,51 +1,82 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// Removed: import { Product } from '../types';
+import { useAuth } from './AuthContext';
+import { fetchWithError } from '../utils/fetchWithError';
+import { apiUrl } from '../utils/api';
 
-// Removed the interface definition
-// interface WishlistContextType { ... }
-
-// Removed type annotation from createContext
 const WishlistContext = createContext(undefined);
 
-// Removed type annotation from the component definition
 export const WishlistProvider = ({ children }) => {
-  // Removed type annotation <Product[]>
+  const { token, user } = useAuth();
+
   const [wishlistItems, setWishlistItems] = useState(() => {
-    // Load wishlist from localStorage on initial render
-    const savedWishlist = localStorage.getItem('wishlist');
-    // JSON.parse works fine on the stored string, result will be an array or null
-    return savedWishlist ? JSON.parse(savedWishlist) : [];
+    return user ? user.wishlistItems.map(item => item.product) : [];
   });
 
-  // Save wishlist to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
-  }, [wishlistItems]);
+  const addToWishlist = async (product) => {
+    try {
+      const result = await fetchWithError(
+        fetch(apiUrl('/wishlist'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ productId: product.id }),
+      })
+      );
 
-  // Removed type annotation from parameter
-  const addToWishlist = (product) => {
-    setWishlistItems(prevItems => {
-      // Assumes product has an 'id' property
-      if (prevItems.some(item => item.id === product.id)) {
-        return prevItems; // Product already in wishlist
-      }
-      return [...prevItems, product]; // Add new product
-    });
+      setWishlistItems(prevItems => {
+        if (prevItems.some(item => item.id === product.id)) {
+          return prevItems; // Product already in wishlist
+        }
+        return [...prevItems, product]; // Add new product
+      });
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      throw new Error('Failed to add item to wishlist');
+    }
   };
 
-  // Removed type annotation from parameter
-  const removeFromWishlist = (productId) => {
-    // Assumes product items have an 'id' property
-    setWishlistItems(prevItems => prevItems.filter(item => item.id !== productId));
+  const removeFromWishlist = async (productId) => {
+    try {
+      await fetchWithError(
+        fetch(apiUrl('/wishlist'), {
+          method: 'DELETE',
+          headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ productId }),
+        })
+      );
+
+      setWishlistItems(prevItems => prevItems.filter(item => item.id !== productId));
+    } catch (error) {
+      console.error('Error removing from wishlist:', error);
+      throw new Error('Failed to remove item from wishlist');
+    }
   };
 
-  const clearWishlist = () => {
-    setWishlistItems([]);
+  const clearWishlist = async () => {
+    try {
+      await fetchWithError(
+        fetch(apiUrl('/wishlist/clear'), {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+      );
+
+      setWishlistItems([]);
+    } catch (error) {
+      console.error('Error clearing wishlist:', error);
+      throw new Error('Failed to clear wishlist');
+    }
   };
 
-  // Removed type annotation from parameter
   const isInWishlist = (productId) => {
-    // Assumes product items have an 'id' property
     return wishlistItems.some(item => item.id === productId);
   };
 
@@ -64,12 +95,10 @@ export const WishlistProvider = ({ children }) => {
   );
 };
 
-// Removed return type annotation
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
-  // The check for undefined is still good practice in JS
   if (context === undefined) {
     throw new Error('useWishlist must be used within a WishlistProvider');
   }
-  return context; // Returns the context value object
+  return context;
 };

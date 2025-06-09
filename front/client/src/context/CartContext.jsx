@@ -1,57 +1,75 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// Type imports are removed in JavaScript
+import { fetchWithError } from '../utils/fetchWithError';
+import { useAuth } from './AuthContext';
+import { redirectToLogin } from '../utils/redirectToLogin';
+import { apiUrl } from '../utils/api';
 
-// No need for the interface CartContextType in JavaScript
-
-// Removed the type argument for createContext
 const CartContext = createContext(undefined);
 
-// Removed the React.FC and children type annotations
 export const CartProvider = ({ children }) => {
-  // Removed type annotation <CartItem[]>
+  const { token, user } = useAuth();
+
   const [cartItems, setCartItems] = useState(() => {
-    // Load cart from localStorage on initial render
-    // JSON.parse will work as long as the stored data is valid JSON
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    return user ? user.cartItems : [];
   });
 
-  // Save cart to localStorage whenever it changes - logic remains the same
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Removed type annotations on function parameters
-  const addToCart = (product, quantity, metalType, size) => {
-    setCartItems(prevItems => {
-      // The findIndex logic relies on the structure of the objects,
-      // which is fine in JavaScript as long as the data adheres to it.
-      const existingItemIndex = prevItems.findIndex(
-        item => item.product.id === product.id && item.metalType === metalType && item.size === size
+  const addToCart = async (product, quantity, metalType) => {
+    try {
+      const result = await fetchWithError(
+        fetch(apiUrl('/cart'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product.id,
+            quantity,
+            metalType,
+          }),
+        })
       );
 
-      if (existingItemIndex !== -1) {
-        // Update quantity if item already exists with same options
-        const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += quantity;
-        return updatedItems;
-      } else {
-        // Add new item
-        // Creates a new object with product, quantity, metalType, size properties.
-        return [...prevItems, { product, quantity, metalType, size }];
-      }
-    });
+      setCartItems(prevItems => {
+        const existingItemIndex = prevItems.findIndex(
+          item => item.product.id === product.id && item.metalType === metalType
+        );
+
+        if (existingItemIndex !== -1) {
+          const updatedItems = [...prevItems];
+          updatedItems[existingItemIndex].quantity += quantity;
+          return updatedItems;
+        } else {
+          return [...prevItems, { id: result.id, product, quantity, metalType }];
+        }
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      throw new Error('Failed to add item to cart');
+    }
   };
 
-  // Removed type annotation on function parameter
-  const removeFromCart = (productId) => {
-    // Filter logic remains the same, relies on item.product.id existing
-    setCartItems(prevItems => prevItems.filter(item => item.product.id !== productId));
+  const removeFromCart = async (cartItemId) => {
+    try {
+      await fetchWithError(
+        fetch(apiUrl('/cart'), {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ cartItemId }),
+        })
+      );
+
+      setCartItems(prevItems => prevItems.filter(item => item.id !== cartItemId));
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      throw new Error('Failed to remove item from cart');
+    }
   };
 
-  // Removed type annotations on function parameters
   const updateQuantity = (productId, quantity) => {
-    // Map logic remains the same, relies on item.product.id existing
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.product.id === productId
@@ -61,17 +79,14 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Logic remains the same
   const clearCart = () => {
     setCartItems([]);
   };
 
-  // Logic remains the same, relies on item.quantity existing
   const getTotalItems = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // Logic remains the same, relies on item.product.price and item.quantity existing
   const getTotalPrice = () => {
     return cartItems.reduce(
       (total, item) => total + item.product.price * item.quantity,
@@ -79,7 +94,6 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Logic remains the same, relies on item.product.id existing
   const isInCart = (productId) => {
     return cartItems.some(item => item.product.id === productId);
   };
@@ -102,10 +116,8 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Removed the return type annotation
 export const useCart = () => {
   const context = useContext(CartContext);
-  // The check for undefined context is still a good practice in JS
   if (context === undefined) {
     throw new Error('useCart must be used within a CartProvider');
   }

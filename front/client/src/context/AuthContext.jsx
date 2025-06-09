@@ -1,83 +1,20 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-// Removed import for types (User, Address, Order) as they are not needed in JS
+import { fetchWithError } from '../utils/fetchWithError';
+import { apiUrl } from '../utils/api';
 
-// Removed interface AuthContextType
-
-// Mock user data - removed type annotation
-const mockUser = {
-  id: 'user-1',
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  addresses: [
-    {
-      id: 'address-1',
-      name: 'Home',
-      street: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'USA',
-      isDefault: true
-    }
-  ]
-};
-
-// Mock orders - removed type annotation
-const mockOrders = [
-  {
-    id: 'order-1',
-    date: '2025-03-15',
-    status: 'delivered',
-    items: [
-      {
-        product: {
-          id: '1',
-          name: 'Diamond Eternity Ring',
-          price: 2499.99,
-          images: ['https://images.pexels.com/photos/9428867/pexels-photo-9428867.jpeg'],
-          category: 'Rings',
-          collection: 'Wedding',
-          metalType: ['White Gold', 'Yellow Gold', 'Rose Gold'],
-          description: 'Our stunning Diamond Eternity Ring features a continuous circle of brilliant-cut diamonds set in precious metal.',
-          shortDescription: 'Brilliant-cut diamonds in a continuous circle of elegance.',
-          isNew: false,
-          isBestSeller: true,
-          availableSizes: ['5', '6', '7', '8', '9']
-        },
-        quantity: 1,
-        metalType: 'White Gold',
-        size: '7'
-      }
-    ],
-    total: 2499.99,
-    shippingAddress: { // Assume this structure matches Address type
-      id: 'address-1',
-      name: 'Home',
-      street: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      country: 'USA',
-      isDefault: true
-    },
-    paymentMethod: 'Credit Card'
-  }
-];
-
-// Removed type argument <AuthContextType | undefined>
 const AuthContext = createContext(undefined);
 
-// Removed type annotation React.FC<{ children: React.ReactNode }>
 export const AuthProvider = ({ children }) => {
-  // Removed type annotation <User | null>
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-  // Removed type annotation <Order[]>
-  const [orders, setOrders] = useState(mockOrders); // Using mock orders
+  const [user, setUser] = useState(null);
 
-  const isAuthenticated = user !== null;
+  const [ serverParams, setServerParams ] = useState({});
+
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    return savedToken ? savedToken : null;
+  });
+
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -87,104 +24,220 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // Removed parameter and return type annotations
   const login = async (email, password) => {
-    // Mock login functionality
-    if (email === 'demo@example.com' && password === 'password') {
-      setUser(mockUser);
-      return true;
-    }
-    return false;
+    const result = await fetchWithError(
+      fetch(apiUrl('/auth/login'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        })
+    );
+
+    localStorage.setItem('token', result.token);
+    localStorage.setItem('user', JSON.stringify(result.customer));
+    setToken(result.token);
+    setUser(result.customer);
+
+    return true;
   };
 
-  // Removed parameter and return type annotations
-  const register = async (name, email, password) => {
-    // Mock register functionality
-    // Removed type annotation for newUser
-    const newUser = {
-      id: 'user-' + Date.now(),
-      name,
-      email,
-      addresses: []
-    };
-    setUser(newUser);
+  const register = async (name, email, phone, password) => {
+    await fetchWithError(
+      fetch(apiUrl('/auth/register'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            password,
+          }),
+        })
+    );
+
     return true;
   };
 
   const logout = () => {
-    setUser(null);
+    clearUserData();
+    window.location.href = '/login';
   };
 
-  // Removed parameter type annotation
-  const updateProfile = (updates) => {
-    if (user) {
-      setUser({ ...user, ...updates });
+  const updateProfile = async (updates) => {
+    try {
+      await fetchWithError(
+        fetch(apiUrl('/customer/update_profile'),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(updates),
+          })
+      );
+
+      const updatedUser = {...user, ...updates};
+
+      setUser({ ...updatedUser });
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw new Error('Failed to update profile');
     }
   };
 
-  // Removed parameter type annotation
-  const addAddress = (address) => {
-    if (user) {
-      // Removed type annotation for newAddress
-      const newAddress = {
-        ...address, // Assumes 'address' object structure matches Address without 'id'
-        id: 'address-' + Date.now()
-      };
+  const addAddress = async (address) => {
+    try {
+      const addr = await fetchWithError(
+        fetch(apiUrl('/customer/add_address'),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressData: address,
+            }),
+          })
+      );
 
-      // If this is the first address or it's marked as default, make sure it's the only default
-      const updatedAddresses = address.isDefault
-        ? user.addresses.map(addr => ({ ...addr, isDefault: false }))
-        : [...user.addresses];
-
-      updatedAddresses.push(newAddress);
-      setUser({ ...user, addresses: updatedAddresses });
-    }
-  };
-
-  // Removed parameter type annotation
-  const updateAddress = (address) => {
-    if (user) {
-      let updatedAddresses;
-
-      // If this address is being set as default, update all other addresses
-      if (address.isDefault) {
-        updatedAddresses = user.addresses.map(addr =>
-          addr.id === address.id ? address : { ...addr, isDefault: false }
-        );
-      } else {
-        updatedAddresses = user.addresses.map(addr =>
-          addr.id === address.id ? address : addr
-        );
+      if (user) {
+        const updatedAddresses = [...user.addresses, { ...addr }];
+        setUser({ ...user, addresses: updatedAddresses });
       }
-
-      setUser({ ...user, addresses: updatedAddresses });
+    } catch (error) {
+      console.error('Error adding address:', error);
+      throw new Error('Failed to add address');
     }
   };
 
-  // Removed parameter type annotation
-  const removeAddress = (addressId) => {
-    if (user) {
-      const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
-      setUser({ ...user, addresses: updatedAddresses });
+  const updateAddress = async (address) => {
+    try {
+      const updatedAddr = await fetchWithError(
+        fetch(apiUrl('/customer/update_address'),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressId: address.id,
+              addressData: address,
+            }),
+          })
+      );
+
+      if (user) {
+        const updatedAddresses = user.addresses.map(addr =>
+          addr.id === updatedAddr.id ? updatedAddr : addr
+        );
+        setUser({ ...user, addresses: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Error updating address:', error);
+      throw new Error('Failed to update address');
     }
   };
+
+  const removeAddress = async (addressId) => {
+    try {
+      await fetchWithError(
+        fetch(apiUrl('/customer/delete_address'),
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              addressId,
+            }),
+          })
+      );
+
+      if (user) {
+        const updatedAddresses = user.addresses.filter(addr => addr.id !== addressId);
+        setUser({ ...user, addresses: updatedAddresses });
+      }
+    } catch (error) {
+      console.error('Error removing address:', error);
+      throw new Error('Failed to remove address');
+    }
+  };
+
+  const clearUserData = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  };
+
+  // Verifying user token
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const response = await fetch(apiUrl('/auth/verify'), {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Token verification failed');
+        }
+
+        const data = await response.json();
+        setUser(data.customer);
+        setServerParams(data.serverParams || {});
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        clearUserData();
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+
+    if (token) {
+      verifyToken();
+    } else {
+      setIsVerifying(false);
+    }
+  }, [token]);
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        serverParams,
+        token,
         login,
         register,
         logout,
-        isAuthenticated,
+        isAuthenticated: user !== null,
         updateProfile,
         addAddress,
         updateAddress,
         removeAddress,
-        orders // Providing mock orders
       }}
     >
-      {children}
+      {isVerifying ? (
+        <div className="h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : children}
     </AuthContext.Provider>
   );
 };

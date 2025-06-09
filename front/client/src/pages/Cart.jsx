@@ -3,36 +3,34 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 
 import Button from '../components/ui/Button';
-// Assuming useCart and useAuth are standard React context hooks exported from JS/TS files
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { redirectToLogin } from '../utils/redirectToLogin';
+import { useFetch } from '../context/FetchContext';
 
-// Removed the : React.FC type annotation
 const Cart = () => {
-  // Context hooks are used the same way
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice } = useCart();
-  const { isAuthenticated } = useAuth();
-  // useNavigate hook is used the same way
+  const { isAuthenticated, serverParams } = useAuth();
+  const { callFetch } = useFetch();
+
   const navigate = useNavigate();
 
-  // Removed type annotations for function parameters
+  if (!isAuthenticated) {
+    redirectToLogin();
+  }
+
   const handleQuantityChange = (productId, newQuantity) => {
     updateQuantity(productId, newQuantity);
   };
 
-  // Removed type annotation for function parameter
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+  const handleRemoveItem = async (cartItemId) => {
+    await callFetch(removeFromCart(cartItemId));
   };
 
-  // Logic remains the same
   const handleCheckout = () => {
-    if (isAuthenticated) {
-      navigate('/checkout');
-    } else {
-      // State object for navigation is standard react-router-dom
-      navigate('/login', { state: { redirectTo: '/checkout' } });
-    }
+    // navigate('/checkout');
+    // Used window.location.href to resync with server
+    window.location.href = '/checkout';
   };
 
   return (
@@ -40,7 +38,6 @@ const Cart = () => {
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-serif text-gray-900 mb-6">Shopping Cart</h1>
 
-        {/* Conditional rendering based on cartItems.length is standard JS */}
         {cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
@@ -62,9 +59,8 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Cart Items - mapping over array is standard JS */}
+                {/* Cart Items  */}
                 {cartItems.map((item) => (
-                  // Key prop syntax is standard React
                   <div key={`${item.product.id}-${item.metalType}-${item.size}`} className="border-b border-gray-200 last:border-0">
                     {/* Mobile Layout */}
                     <div className="md:hidden p-4">
@@ -87,33 +83,15 @@ const Cart = () => {
 
                           <div className="text-sm text-gray-600 mt-1">
                             <span>Metal: {item.metalType}</span>
-                            {/* Conditional rendering based on item.size is standard JS */}
-                            {item.size !== 'One Size' && (
-                              <span className="ml-2">Size: {item.size}</span>
-                            )}
                           </div>
 
                           <div className="flex justify-between items-center mt-2">
-                            {/* toLocaleString() for currency formatting is standard JS */}
                             <span className="font-medium">${item.product.price.toLocaleString()}</span>
 
                             <div className="flex items-center">
-                              <button
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                                className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
-                                disabled={item.quantity <= 1} // Disabled prop is standard HTML/React
-                              >
-                                -
-                              </button>
-                              <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300">
+                              <span className="w-10 h-8 flex items-center justify-center border border-gray-300">
                                 {item.quantity}
                               </span>
-                              <button
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                                className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r"
-                              >
-                                +
-                              </button>
                             </div>
                           </div>
 
@@ -123,11 +101,11 @@ const Cart = () => {
                             </span>
 
                             <button
-                              onClick={() => handleRemoveItem(item.product.id)}
+                              onClick={() => handleRemoveItem(item.id)}
                               className="text-red-500 p-1 hover:bg-red-50 rounded"
-                              aria-label="Remove item" // Aria-label is standard HTML/React
+                              aria-label="Remove item"
                             >
-                              <Trash2 size={18} /> {/* Lucide icon component is standard React */}
+                              <Trash2 size={18} />
                             </button>
                           </div>
                         </div>
@@ -152,9 +130,6 @@ const Cart = () => {
                             </Link>
                             <div className="text-sm text-gray-600 mt-1">
                               <span>Metal: {item.metalType}</span>
-                              {item.size !== 'One Size' && (
-                                <span className="ml-2">Size: {item.size}</span>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -162,36 +137,23 @@ const Cart = () => {
 
                       {/* Price */}
                       <div className="col-span-2 text-center">
-                        <span>${item.product.price.toLocaleString()}</span>
+                        <span>Rs. {item.product.price.toLocaleString()}</span>
                       </div>
 
                       {/* Quantity */}
                       <div className="col-span-2">
                         <div className="flex items-center justify-center">
-                          <button
-                            onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                            className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
-                            disabled={item.quantity <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300">
+                          <span className="w-10 h-8 flex items-center justify-center border border-gray-300">
                             {item.quantity}
                           </span>
-                          <button
-                            onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                            className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r"
-                          >
-                            +
-                          </button>
                         </div>
                       </div>
 
                       {/* Total & Remove */}
                       <div className="col-span-2 text-right flex justify-end items-center gap-3">
-                        <span className="font-medium">${(item.product.price * item.quantity).toLocaleString()}</span>
+                        <span className="font-medium">Rs. {(item.product.price * item.quantity).toLocaleString()}</span>
                         <button
-                          onClick={() => handleRemoveItem(item.product.id)}
+                          onClick={() => handleRemoveItem(item.id)}
                           className="text-red-500 p-1 hover:bg-red-50 rounded"
                           aria-label="Remove item"
                         >
@@ -220,38 +182,42 @@ const Cart = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">${getTotalPrice().toLocaleString()}</span>
+                    <span className="font-medium">Rs. {getTotalPrice().toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
+
+                  {/* Uncomment if you want */}
+                  {/* <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
                     <span className="font-medium">Calculated at checkout</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Taxes</span>
                     <span className="font-medium">Calculated at checkout</span>
-                  </div>
+                  </div> */}
 
                   <div className="border-t border-gray-200 pt-3 mt-3">
                     <div className="flex justify-between">
                       <span className="font-medium text-lg">Estimated Total</span>
-                      <span className="font-medium text-lg">${getTotalPrice().toLocaleString()}</span>
+                      <span className="font-medium text-lg">Rs. {getTotalPrice().toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Button component and its props are standard React */}
-                <Button
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  onClick={handleCheckout}
-                >
-                  Proceed to Checkout
-                </Button>
+                {getTotalPrice() > serverParams.payhereMaxAmount ? (
+                  <div className="mt-4 text-center text-sm text-red-600">
+                    The total amount exceeds <b>Rs. {getTotalPrice()}.</b> You cannot place the order online—please visit our shop to complete the purchase.
+                  </div>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={handleCheckout}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                )}
 
-                <div className="mt-4 text-center text-sm text-gray-500">
-                  Shipping, taxes, and discounts will be calculated at checkout.
-                </div>
               </div>
             </div>
           </div>

@@ -1,0 +1,462 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jun 09, 2025 at 09:36 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `gemly`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cartitems`
+--
+
+CREATE TABLE `cartitems` (
+  `id` int(11) NOT NULL,
+  `customerId` int(11) NOT NULL,
+  `productId` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `metalType` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cartitems`
+--
+
+INSERT INTO `cartitems` (`id`, `customerId`, `productId`, `quantity`, `metalType`) VALUES
+(5, 3, 50, 1, 'Yellow Gold'),
+(21, 1, 93, 1, 'Yellow Gold');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `image` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `image`) VALUES
+(1, 'Bangles', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Plain-Bangles-500x668-1.jpg'),
+(2, 'Bracelets', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Precious-Stone-Studded-Bracelets-500x668-v1.jpg'),
+(3, 'Chains', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Chains-500x668-1.jpg'),
+(4, 'Ear studs-Earrings', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gypsy-Earrings-500x6678-1.jpg'),
+(5, 'Necklaces', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Vogue-Jewellers-Neckles-500x668-1.jpg'),
+(6, 'Pendants', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Vogue-Jewellers-Pendents-500x668-2.jpg'),
+(7, 'Rings', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Engagement-Rings-500x668-1.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `collections`
+--
+
+CREATE TABLE `collections` (
+  `id` int(11) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `description` varchar(191) NOT NULL,
+  `image` varchar(191) NOT NULL,
+  `isFeatured` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `collections`
+--
+
+INSERT INTO `collections` (`id`, `name`, `description`, `image`, `isFeatured`) VALUES
+(1, 'Wedding', 'Jewellery for weddings', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Chains-500x668-1.jpg', 1),
+(2, 'Daily Wear', 'Jewellery for daily use', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Engagement-Rings-500x668-1.jpg', 1),
+(3, 'Gold', 'Gold Jewellery', 'https://www.voguejewellers.lk/wp-content/uploads/2024/09/Vogue-Jewellers-Neckles-500x668-1.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customeraddresses`
+--
+
+CREATE TABLE `customeraddresses` (
+  `id` int(11) NOT NULL,
+  `city` varchar(191) NOT NULL,
+  `country` varchar(191) NOT NULL DEFAULT 'Sri Lanka',
+  `customerId` int(11) NOT NULL,
+  `isDefault` tinyint(1) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `state` varchar(191) NOT NULL,
+  `street` varchar(191) NOT NULL,
+  `zip` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customeraddresses`
+--
+
+INSERT INTO `customeraddresses` (`id`, `city`, `country`, `customerId`, `isDefault`, `name`, `state`, `street`, `zip`) VALUES
+(2, 'Dikwella', 'Sri Lanka', 1, 1, 'Udanaff', 'Southern', 'Belideniya, Kottegoda', '81180'),
+(4, 'Dikwella', 'Sri Lanka', 1, 0, 'Udana 2', '', 'Belideniya, Kottegoda', '81180');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `password` varchar(191) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `password`) VALUES
+(1, 'Tharusha Udanaaa', 'tharusha.udana529@gmail.com', '0773531479', '$2b$10$8Xw526OV68M9VaMFJ9oZ8Oe.aKjMuBHl9RO72ohiuVnCkB6FjOzYS'),
+(3, 'Tharusha Udana', 'tharusha.udana2529@gmail.com', '0773531478', '$2b$10$/BBGUSxzQQMhcvlBuboP7uhcvFw/GXgKeQRsBHsVD8C70Wlm/hBkK');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` varchar(191) NOT NULL,
+  `cartItems` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`cartItems`)),
+  `address` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`address`)),
+  `totalAmount` double NOT NULL,
+  `paymentStatus` varchar(191) NOT NULL DEFAULT 'notpaid',
+  `customerId` int(11) NOT NULL,
+  `paymentMd5Sig` varchar(191) NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `cartItems`, `address`, `totalAmount`, `paymentStatus`, `customerId`, `paymentMd5Sig`, `createdAt`) VALUES
+('GM-1749157828566', '[{\"id\":10,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}},{\"id\":13,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Rose Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 44736, 'paid', 1, 'B32AB3DBE149CC0B18E7F2F0C543E319', '2025-06-05 21:10:28.567'),
+('GM-1749158001087', '[{\"id\":10,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}},{\"id\":13,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Rose Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 44736, 'paid', 1, '215764B2C0888F3132851BBD9C6666F4', '2025-06-05 21:13:21.090'),
+('GM-1749159004407', '[{\"id\":14,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"White Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}},{\"id\":15,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Rose Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 44736, 'paid', 1, '63230DB4F54C9DEC88F20FEEFBA0D172', '2025-06-05 21:30:04.409'),
+('GM-1749163797727', '[{\"id\":18,\"customerId\":1,\"productId\":58,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":58,\"name\":\"Pendant\",\"price\":28611,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\"],\"categoryId\":6,\"collectionId\":2,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Carry a symbol of divine grace with this Miraculous Medal pendant, perfect for daily devotion and wear.  Its intricate details and meaningful design make it a powerful and comforting accessory.  Wear it as a reminder of faith and protection throughout your day.  Crafted with reverence, this pendant is a cherished religious item. The detailed engraving holds spiritual significance. A personal and faith-inspired piece of jewelry.\",\"shortDescription\":\"Miraculous Medal Pendant for Daily Wear\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 28611, 'paid', 1, '', '2025-06-05 22:49:57.732'),
+('GM-1749165111877', '[{\"id\":18,\"customerId\":1,\"productId\":58,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":58,\"name\":\"Pendant\",\"price\":28611,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\"],\"categoryId\":6,\"collectionId\":2,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Carry a symbol of divine grace with this Miraculous Medal pendant, perfect for daily devotion and wear.  Its intricate details and meaningful design make it a powerful and comforting accessory.  Wear it as a reminder of faith and protection throughout your day.  Crafted with reverence, this pendant is a cherished religious item. The detailed engraving holds spiritual significance. A personal and faith-inspired piece of jewelry.\",\"shortDescription\":\"Miraculous Medal Pendant for Daily Wear\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 28611, 'notpaid', 1, '', '2025-06-05 23:11:51.879'),
+('GM-1749310893378', '[{\"id\":19,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 22368, 'notpaid', 1, '', '2025-06-07 15:41:33.406'),
+('GM-1749310919197', '[{\"id\":19,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 22368, 'notpaid', 1, '', '2025-06-07 15:41:59.199'),
+('GM-1749310963964', '[{\"id\":19,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 22368, 'notpaid', 1, '', '2025-06-07 15:42:43.966'),
+('GM-1749311089757', '[{\"id\":20,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Rose Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":4,\"customerId\":1,\"name\":\"Udana 2\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":false}', 22368, 'paid', 1, '1B82569332C240AEB0F8AF20AD167D0A', '2025-06-07 15:44:49.759'),
+('GM-1749406912171', '[{\"id\":21,\"customerId\":1,\"productId\":93,\"quantity\":1,\"metalType\":\"Yellow Gold\",\"product\":{\"id\":93,\"name\":\"Ring\",\"price\":22368,\"images\":[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\",\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"],\"categoryId\":7,\"collectionId\":1,\"metalType\":[\"White Gold\",\"Yellow Gold\",\"Rose Gold\"],\"description\":\"Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.\",\"shortDescription\":\"Diamond Rings for Functions\",\"isNew\":false,\"isBestSeller\":false}}]', '{\"id\":2,\"customerId\":1,\"name\":\"Udanaff\",\"street\":\"Belideniya, Kottegoda\",\"city\":\"Dikwella\",\"state\":\"Southern\",\"zip\":\"81180\",\"country\":\"Sri Lanka\",\"isDefault\":true}', 22368, 'notpaid', 1, '', '2025-06-08 18:21:52.178');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `price` double NOT NULL,
+  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`images`)),
+  `categoryId` int(11) NOT NULL,
+  `collectionId` int(11) NOT NULL,
+  `metalType` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metalType`)),
+  `description` text NOT NULL,
+  `shortDescription` text NOT NULL,
+  `isNew` tinyint(1) NOT NULL,
+  `isBestSeller` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `price`, `images`, `categoryId`, `collectionId`, `metalType`, `description`, `shortDescription`, `isNew`, `isBestSeller`) VALUES
+(50, 'Ear Studs/Earrings', 288518, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earringv2-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earringv2-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earringv2-1000x1000-1.jpg\"]', 4, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Elevate your wedding day look with these stunning diamond ear studs. Crafted with precision and featuring brilliant diamonds, these earrings are the perfect accessory to add a touch of sparkle and elegance to your bridal ensemble. Their classic design ensures they will be cherished for years to come as a beautiful reminder of your special day.  These earrings are meticulously crafted from the finest materials, ensuring both beauty and durability.  Each diamond is carefully selected for its clarity and brilliance, set to maximize its sparkle.  The secure backing provides comfort and confidence throughout your celebration.  Ideal for brides, bridesmaids, or as a memorable gift for a loved one celebrating a significant milestone.', 'Diamond Earrings for Wedding', 1, 1),
+(51, 'Ear Studs/Earrings', 529946, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-studs-Earring-1000x1000-1.jpg\"]', 4, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'These elegant diamond ear studs are designed to complement any wedding attire.  Their timeless appeal and dazzling diamonds make them a versatile choice for brides or anyone attending a special occasion.  Lightweight and comfortable, they provide all-day wearability without compromising on style.  Each pair is a testament to exquisite craftsmanship and attention to detail. The diamonds are expertly cut and set to capture and reflect light beautifully. The hypoallergenic metal ensures suitability for sensitive skin.  A sophisticated addition to any jewelry collection.', 'Classic Diamond Ear Studs', 0, 0),
+(52, 'Chain', 784178, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Diamond-Cut-Chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Diamond-Cut-Chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Diamond-Cut-Chain-1000x1000-1.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This diamond-cut chain is a versatile and stylish piece for everyday wear. Its intricate design catches the light, adding a subtle shimmer to your look. Perfect for layering with other necklaces or wearing on its own, this chain is a must-have for any jewelry collection.  Crafted from durable metal, this chain is designed for longevity and everyday use. The diamond-cut finish creates a captivating sparkle.  Its lightweight feel ensures comfortable wear throughout the day.  A perfect foundation for your favorite pendants or worn simply for understated elegance.', 'Sparkling Diamond Cut Chain', 0, 0),
+(53, 'Bangle', 341048, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Bangle-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Bangle-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Bangle-1000x1000-1.jpg\"]', 1, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Adorn your wrist with this beautiful semi-precious stone bangle, perfect for adding a pop of color and elegance to your wedding guest attire or any special occasion.  The carefully selected stones and expert craftsmanship make this bangle a unique and eye-catching piece.  Made with high-quality materials and genuine semi-precious stones, this bangle is designed to be both beautiful and durable. Each stone is unique, adding character to the piece.  The smooth finish ensures comfortable wear.  A perfect gift for a bridesmaid or a special treat for yourself.', 'Semi-precious Stone Bangle', 1, 1),
+(54, 'Pendant', 332707, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26854140491-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26854140491-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26854140491-1000x1000-1.jpg\"]', 6, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This exquisite cross pendant is a meaningful and elegant accessory for a wedding or any significant religious event.  Its delicate design and shimmering finish make it a beautiful symbol of faith and love.  Wear it close to your heart as a cherished reminder of your beliefs.  Crafted from precious metal, this pendant is built to last and become a treasured heirloom. The intricate details highlight the skilled artistry.  A timeless piece that carries deep personal significance.', 'Elegant Cross Pendant', 0, 0),
+(55, 'Pendant', 630393, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26844050441-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26844050441-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26844050441-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Embrace spirituality and style with this Dharmachakra pendant, perfect for daily wear.  Its intricate design represents the turning of the wheel of dharma and adds a touch of cultural significance to your look.  Lightweight and comfortable, it\'s an ideal everyday accessory.  Made with attention to detail, this pendant is a symbol of peace and wisdom. The polished finish enhances its beauty.  A unique piece that reflects personal beliefs and adds a touch of serenity to your day.', 'Dharmachakra Symbol Pendant', 0, 1),
+(56, 'Pendant', 163840, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cross-Pendants-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cross-Pendants-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cross-Pendants-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This simple yet elegant cross pendant is perfect for daily wear. Its understated design makes it a versatile accessory that can be paired with any outfit. A beautiful way to express your faith and keep it close to your heart.  Crafted from durable metal, this pendant is designed for everyday resilience. The clean lines and polished finish give it a classic look.  A meaningful and stylish addition to your daily accessories.', 'Simple Daily Wear Cross Pendant', 1, 0),
+(57, 'Pendant', 898027, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-10425460497-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-10425460497-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-10425460497-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'A classic cross pendant designed for everyday elegance.  Its timeless appeal and durable construction make it a perfect accessory to wear daily as a symbol of your faith.  The smooth finish and comfortable weight ensure effortless wear.  Made with quality materials, this pendant is a lasting piece that will stand the test of time. Its versatile design complements various styles.  A thoughtful gift for yourself or a loved one.', 'Everyday Classic Cross Pendant', 0, 1),
+(58, 'Pendant', 28611, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26906020481-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Carry a symbol of divine grace with this Miraculous Medal pendant, perfect for daily devotion and wear.  Its intricate details and meaningful design make it a powerful and comforting accessory.  Wear it as a reminder of faith and protection throughout your day.  Crafted with reverence, this pendant is a cherished religious item. The detailed engraving holds spiritual significance. A personal and faith-inspired piece of jewelry.', 'Miraculous Medal Pendant for Daily Wear', 0, 0),
+(59, 'Pendant', 408976, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26592110471-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26592110471-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26592110471-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This Dharmachakra pendant is a beautiful expression of Buddhist beliefs, suitable for daily wear.  Its intricate design and symbolic meaning make it a unique and inspiring accessory.  Wear it as a personal reminder of your spiritual path and values.  Made with precision and care, this pendant reflects cultural heritage. The intricate pattern is visually appealing. A meaningful and stylish piece for those who resonate with its symbolism.', 'Daily Wear Dharmachakra Pendant', 0, 1),
+(60, 'Pendant', 959048, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-24904110447-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-24904110447-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-24904110447-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Add a touch of sparkle to your daily routine with this elegant diamond pendant.  Featuring dazzling diamonds, this pendant is designed to catch the light and add a hint of luxury to your everyday look.  Its versatile design makes it perfect for layering or wearing on its own.  Crafted with high-quality diamonds and precious metal, this pendant offers lasting brilliance. The diamonds are expertly set for maximum fire.  A perfect balance of elegance and everyday wearability.', 'Sparkling Diamond Pendant for Daily Wear', 0, 0),
+(61, 'Pendant', 588308, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-18050540428-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-18050540428-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-18050540428-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Infuse your daily style with the vibrant beauty of this emerald pendant.  Featuring a stunning emerald stone, this pendant adds a touch of natural elegance and color to your look.  Its classic design makes it a timeless accessory for any occasion.  Made with a genuine emerald and quality metal, this pendant is a captivating piece. The rich green of the emerald adds a pop of color. A beautiful and meaningful addition to your jewelry collection.', 'Daily Wear Emerald Pendant', 0, 0),
+(62, 'Pendant', 54399, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26064060472-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26064060472-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-26064060472-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Embrace the timeless elegance of pearls with this beautiful pearl pendant, perfect for daily wear.  Featuring a lustrous pearl, this pendant adds a touch of sophistication and grace to any outfit. Its simple yet refined design makes it a versatile accessory.  Showcasing a genuine pearl, this pendant is a symbol of purity and elegance. The natural beauty of the pearl is captivating. A classic and refined piece for everyday wear.', 'Classic Pearl Pendant for Daily Wear', 1, 0),
+(63, 'Pendant', 477072, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-22972040438-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-22972040438-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pendant-22972040438-1000x1000-1.jpg\"]', 6, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Adorn yourself with the captivating beauty of a blue sapphire with this elegant pendant, suitable for daily wear.  Featuring a stunning blue sapphire stone, this pendant adds a touch of luxury and color to your look.  Its timeless design ensures it will be a cherished piece for years to come.  Highlighting a genuine blue sapphire, this pendant offers a rich pop of color. The sapphire is known for its durability and beauty.  A sophisticated and vibrant addition to your daily jewelry.', 'Daily Wear Blue Sapphire Pendant', 0, 0),
+(64, 'Chain', 232163, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Beed-chains-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Beed-chains-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Beed-chains-1000x1000-3.jpg\"]', 3, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This bead chain is a versatile accessory that can be worn alone or layered for a stylish look.  Its delicate beads add a touch of texture and visual interest, making it a perfect complement to various pendants or worn on its own.  Ideal for wedding events or casual wear.  Made with carefully crafted beads, this chain offers a unique texture and appearance.  The lightweight design ensures comfortable wear.  A versatile piece that can be styled in multiple ways.', 'Stylish Bead Chain', 0, 0),
+(65, 'Chain', 709599, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Chain-1000x1000-1.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Experience the artistry of handcrafted jewelry with this Lara chain, perfect for daily wear.  Its unique handmade links give it a distinct character and a touch of traditional charm.  A durable and stylish chain that stands out from the ordinary.  This chain is meticulously handmade, showcasing skilled craftsmanship.  The unique Lara links provide a distinct look and feel.  A durable and stylish chain for everyday use.', 'Handmade Lara Chain for Daily Wear', 0, 0),
+(66, 'Chain', 75798, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Try-Colour-Chains-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Try-Colour-Chains-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Try-Colour-Chains-1000x1000-1.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Add a touch of sophistication to your daily look with this stunning tri-colour chain. Featuring a beautiful blend of white, yellow, and rose gold, this chain is a versatile accessory that complements any style. Its intricate design and shimmering finish make it a standout piece. Crafted with a mix of white, yellow, and rose gold, this chain offers a unique and fashionable look. The interplay of colors creates a visually appealing effect. A stylish and versatile chain for everyday wear.', 'Tri-Colour Chains', 0, 0),
+(67, 'Chain', 804906, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cartier-Rope-Chains-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cartier-Rope-Chains-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Cartier-Rope-Chains-1000x1000-2.jpg\"]', 3, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This elegant rope chain is a timeless piece that adds a touch of sophistication to any outfit. Its intricate rope design creates a textured and visually appealing look. Perfect for wearing alone or layering with other necklaces. Crafted with a classic rope pattern, this chain offers a distinctive texture and look. The durable construction ensures longevity. A versatile piece that can be dressed up or down.', 'Rope Chains', 0, 0),
+(68, 'Chain', 817134, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-Chain-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-Chain-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-Chain-1000x1000-2.jpg\"]', 3, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'A stylish and classic rope chain that adds a touch of elegance to any look. Its intricate design and polished finish make it a versatile accessory for various occasions. Wear it alone for a minimalist look or layer it with pendants. Made with a durable and classic rope design, this chain is built to last. The polished finish provides a radiant shine. A fundamental piece for any jewelry collection.', 'Rope Chains', 0, 0),
+(69, 'Chain', 670952, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-chain-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Rope-chain-1000x1000-1.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This rope chain is a versatile and durable option for everyday wear. Its classic design and strong links ensure it can withstand daily activities while maintaining its beauty. A fundamental piece for any jewelry collection. Featuring a robust rope construction, this chain offers durability for daily use. The classic design never goes out of style. An essential chain for layering or wearing on its own.', 'Rope Chains', 1, 0),
+(70, 'Chain', 893357, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Chains-1000x1000-2-v1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Chains-1000x1000-2-v1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Chains-1000x1000-2-v1.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Combine the timeless elegance of pearls with the classic appeal of a chain in this beautiful pearl chain.  Perfect for adding a touch of sophistication and grace to your daily look. The alternating pearls and chain links create a unique and eye-catching design.  Featuring genuine pearls interspersed with chain links, this piece offers a unique blend of textures. The pearls add a touch of classic elegance. A beautiful and versatile chain for various occasions.', 'Pearl Chains', 0, 0),
+(71, 'Chain', 463929, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Box-Chains-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Box-Chains-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Box-Chains-1000x1000-2.jpg\"]', 3, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This classic box chain is a sturdy and versatile option for daily wear. Its square links interlock tightly, creating a smooth and durable chain that is perfect for holding pendants or wearing on its own. A fundamental piece for any jewelry collection. Constructed with interlocking square links, this chain offers a strong and durable structure. The smooth finish provides a comfortable feel. A reliable and classic chain for everyday use.', 'Box Chains', 0, 0),
+(72, 'Ear Studs/Earrings', 619577, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-3.jpg\"]', 4, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Simple and elegant, these ear studs are perfect for adding a subtle touch of sparkle to your daily look.  Their classic design and comfortable fit make them an ideal everyday accessory.  A versatile pair that complements any outfit.  Designed for effortless daily wear, these ear studs offer comfort and style. The timeless design makes them a versatile choice.  A perfect addition to your everyday jewelry collection.', 'Simple Daily Wear Ear Studs', 0, 0),
+(73, 'Ear Studs/Earrings', 706095, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-2.jpg\"]', 4, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'These classic ear studs are a versatile addition to your daily jewelry rotation.  Their understated elegance makes them suitable for both casual and more formal settings.  Comfortable and secure, they are designed for all-day wear.  Featuring a classic design, these ear studs are perfect for everyday wear. The secure backing provides peace of mind.  An essential pair for any jewelry box.', 'Classic Daily Wear Ear Studs', 0, 0),
+(74, 'Necklace', 671743, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Necklaces-25232040331-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Necklaces-25232040331-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Necklaces-25232040331-1000x1000-1.jpg\"]', 5, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Make a statement at your next function with this stunning Indian-style necklace. Its intricate design and dazzling embellishments capture the essence of traditional Indian jewelry, adding a touch of grandeur and elegance to your look. A truly captivating piece for special occasions. Inspired by traditional Indian designs, this necklace is a captivating piece of artistry. The detailed work and embellishments create a luxurious feel. Perfect for adding a touch of cultural elegance to your attire.', 'Indian Type Necklaces for Functions', 0, 0),
+(75, 'Ear Studs/Earrings', 240432, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ear-Studs-1000x1000-1.jpg\"]', 4, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'These versatile ear studs are perfect for everyday wear, offering a touch of elegance without being overly elaborate. Their simple and chic design makes them a go-to accessory for any daily outfit. Comfortable and lightweight for all-day comfort. Designed for simplicity and comfort, these ear studs are perfect for daily use. The lightweight feel ensures they are barely noticeable. A practical and stylish choice for your everyday jewelry.', 'Daily Wear Ear Studs', 0, 0),
+(76, 'Ear Studs/Earrings', 166930, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earring-1000x1000-1.jpg\"]', 4, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Embrace classic elegance with these beautiful pearl earrings.  Featuring lustrous pearls, these earrings add a touch of sophistication and grace to any look.  Perfect for both formal and semi-formal occasions.  Showcasing exquisite pearls, these earrings are a symbol of timeless beauty. The natural luster of the pearls is captivating. A classic and elegant addition to your jewelry collection.', 'Pearl Earrings', 0, 0),
+(77, 'Ear Studs/Earrings', 103358, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Pearl-Earrings-1000x1000-1.jpg\"]', 4, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'These elegant pearl earrings are a versatile accessory for casual wear.  Their simple yet refined design adds a touch of sophistication to your everyday look.  Lightweight and comfortable for all-day wear.  Featuring classic pearls, these earrings offer understated elegance for casual occasions. The lightweight design ensures comfortable wear.  A timeless and versatile pair of earrings.', 'Pearl Earrings for Casual Wear', 0, 0),
+(78, 'Ear Studs/Earrings', 995998, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Precious-stone-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Precious-stone-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Precious-stone-Earrings-1000x1000-1.jpg\"]', 4, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Add a touch of vibrant color and luxury to your function wear with these precious stone earrings.  Featuring exquisite precious stones, these earrings are designed to catch the light and make a statement.  Perfect for weddings, parties, or any special occasion.  Showcasing beautiful precious stones, these earrings are designed to be eye-catching. The vibrant colors of the stones add a touch of luxury. A stunning pair for special events.', 'Precious Stone Earrings for Functions', 0, 0),
+(79, 'Ear Studs/Earrings', 699915, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ruby-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ruby-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ruby-Earrings-1000x1000-1.jpg\"]', 4, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'These stunning ruby earrings are the perfect accessory to add a touch of fiery elegance to your function wear.  Featuring vibrant ruby stones, these earrings are designed to make a statement and draw attention.  Ideal for special occasions and celebrations.  Highlighting beautiful ruby stones, these earrings offer a rich and vibrant color. Rubies are known for their deep red hue and brilliance. A captivating pair for special events.', 'Ruby Earrings for Functions', 0, 1),
+(80, 'Ear Studs/Earrings', 501580, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gypsy-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gypsy-Earrings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gypsy-Earrings-1000x1000-1.jpg\"]', 4, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Embrace a bohemian spirit with these charming gypsy earrings, perfect for casual wear. Their unique design and playful movement add a touch of personality and flair to your everyday style. Lightweight and comfortable for all-day adventure. Featuring a unique and playful design, these gypsy earrings are perfect for adding a touch of personality. The lightweight construction ensures comfortable wear. A fun and stylish pair for casual outings.', 'Gypsy Earrings for Casual Wear', 0, 0),
+(81, 'Bangle', 398155, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Baby-Bangle-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Baby-Bangle-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Baby-Bangle-1000x1000-1.jpg\"]', 1, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Celebrate a precious new arrival with this adorable baby bangle.  Crafted with care and designed for delicate wrists, this bangle makes a perfect keepsake and a beautiful gift for a baby shower or christening.  Safe and comfortable for little ones.  Made with gentle materials and a smooth finish, this bangle is safe and comfortable for babies. The simple design is perfect for tiny wrists. A cherished keepsake for a new arrival.', 'Adorable Baby Bangle', 0, 0),
+(82, 'Bangle', 848428, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Lock-Type-Bangles-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Lock-Type-Bangles-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Lock-Type-Bangles-1000x1000-1.jpg\"]', 1, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This lock-type bangle offers a unique and secure way to wear your jewelry.  Its distinct design and comfortable fit make it a stylish accessory for casual wear. The locking mechanism adds both security and a design element.  Featuring a secure lock closure, this bangle provides peace of mind during wear. The comfortable fit makes it ideal for daily use. A unique and practical addition to your bangle collection.', 'Lock Type Bangles for Casual Wear', 0, 0),
+(83, 'Bangle', 502802, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-3.jpg\"]', 1, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Make a bold statement at your next function with this broad bangle. Its substantial size and intricate design make it a standout piece that adds a touch of glamour and sophistication to your look. Perfect for special occasions.  Crafted with a significant width, this bangle is designed to be noticed. The intricate details add to its luxurious feel. A striking piece for formal events.', 'Broad Bangles for Functions', 0, 0),
+(84, 'Broad Bangle', 948726, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-2.jpg\"]', 1, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This broad bangle is a classic and elegant piece that adds a touch of luxury to any outfit. Its substantial design and polished finish make it a versatile accessory for various occasions. Wear it alone or stacked with other bangles. Featuring a generous width and a polished finish, this bangle exudes elegance. Its classic design makes it a timeless piece. A sophisticated addition to your jewelry collection.', 'Broad Bangles', 0, 0),
+(85, 'Broad Bangle', 255223, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Broad-Bangles-1000x1000-1.jpg\"]', 1, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Make a grand entrance at your next function with this striking broad bangle.  Its impressive size and detailed craftsmanship create a captivating accessory that enhances your festive attire.  A statement piece for weddings and celebrations.  Designed to stand out, this broad bangle is perfect for making an impression. The intricate details showcase expert craftsmanship. A beautiful and impactful piece for special events.', 'Broad Bangles for Functions', 0, 0),
+(86, 'Bangle', 399939, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Plain-Bangles-1000x1000-v3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Plain-Bangles-1000x1000-v3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Plain-Bangles-1000x1000-v3.jpg\"]', 1, 3, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This 22K plain bangle is a timeless and versatile piece for daily wear.  Its simple yet elegant design makes it perfect for stacking with other bangles or wearing on its own for a minimalist look.  Crafted from high-quality 22K gold for lasting beauty.  Made from pure 22K gold, this bangle offers exceptional quality and shine. Its simple and classic design is perfect for layering. A valuable and versatile addition to your gold jewelry.', '22K Plain Bangle', 0, 0),
+(87, 'Bracelet', 234026, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-6.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-6.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-6.jpg\"]', 2, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Add a pop of color and sophistication to your daily wear with this precious stone bracelet.  Featuring beautiful precious stones, this bracelet is designed to add a touch of elegance and charm to your wrist.  Perfect for everyday style.  Showcasing beautiful precious stones, this bracelet adds a touch of color and elegance to your wrist. The carefully selected stones enhance its beauty.  A stylish and refined piece for daily wear.', 'Precious Stone Bracelets for Daily Wear', 0, 0),
+(88, 'Bracelet', 950314, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-5.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-5.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-5.jpg\"]', 2, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This ladies bracelet is a delicate and elegant accessory for daily wear.  Its refined design and comfortable fit make it a perfect addition to your wrist stack or worn on its own for a subtle touch of style.  Designed for everyday comfort and elegance.  Featuring a delicate and elegant design, this bracelet is perfect for daily wear. The comfortable fit makes it ideal for all-day use. A subtle yet stylish accessory.', 'Ladies Bracelets for Daily Wear', 0, 0),
+(89, 'Bracelet', 79491, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-4.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-4.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-4.jpg\"]', 2, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'A classic and elegant ladies bracelet, perfect for adding a touch of sophistication to your daily routine.  Its timeless design and comfortable fit make it a versatile accessory for any occasion.  Crafted for both beauty and durability.  This classic ladies bracelet is designed for timeless appeal and everyday wear. The durable construction ensures it will last. A versatile and elegant piece for your wrist.', 'Classic Ladies Bracelets', 0, 0),
+(90, 'Bracelet', 506513, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Women-Bracelet-1000x1000-2.jpg\"]', 2, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This ladies bracelet is a chic and modern accessory for daily wear.  Its stylish design and comfortable fit make it a perfect addition to your everyday look.  Easy to wear and adds a touch of contemporary elegance.  Featuring a modern and chic design, this bracelet is perfect for updating your daily style. The comfortable fit ensures effortless wear. A fashionable and versatile accessory.', 'Stylish Ladies Bracelets', 0, 0),
+(91, 'Bracelet', 304094, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Bracelets-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Bracelets-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Bracelets-1000x1000-1.jpg\"]', 2, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This gents bracelet is a stylish and masculine accessory for daily wear.  Its bold design and durable construction make it a perfect addition to any man\'s wrist.  Adds a touch of rugged elegance to your look.  Designed with a bold and masculine aesthetic, this bracelet is perfect for daily wear. The durable construction ensures it can handle everyday activities. A stylish and reliable accessory for men.', 'Gents Bracelets for Daily Wear', 0, 0),
+(92, 'Ring', 980931, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Blue-Sapphire-Rings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Blue-Sapphire-Rings-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Blue-Sapphire-Rings-1000x1000-1.jpg\"]', 7, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This stunning blue sapphire ring is the perfect accessory for function wear or a special occasion.  Featuring a captivating blue sapphire stone, this ring adds a touch of elegance and sophistication to your look.  Its timeless design ensures it will be a cherished piece for years to come.  Highlighting a beautiful blue sapphire, this ring is designed to be eye-catching. The rich blue color of the sapphire is captivating. A luxurious and elegant ring for special events.', 'Blue Sapphire Rings for Functions', 0, 0),
+(93, 'Ring', 22368, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ring-1000x1000-1.jpg\"]', 7, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Sparkle and shine at your next function with this dazzling diamond ring.  Featuring brilliant diamonds, this ring is designed to catch the light and make a statement.  Perfect for weddings, parties, or any special celebration.  Adorned with sparkling diamonds, this ring is designed for maximum brilliance. The diamonds are expertly set to enhance their fire. A luxurious and captivating ring for special occasions.', 'Diamond Rings for Functions', 0, 0),
+(94, 'Ring', 129053, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gents-Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gents-Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Gents-Ring-1000x1000-1.jpg\"]', 7, 2, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This gents ring is a classic and understated accessory for daily wear.  Its simple yet masculine design makes it a versatile piece that complements any style.  Comfortable and durable for everyday use.  Featuring a classic and masculine design, this ring is perfect for daily wear. The durable construction ensures it can withstand everyday activities. A reliable and stylish accessory for men.', 'Gents Rings for Daily Wear', 0, 0),
+(95, 'Ring', 568160, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Wedding-Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Wedding-Ring-1000x1000-1.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Mens-Wedding-Ring-1000x1000-1.jpg\"]', 7, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'Celebrate your eternal bond with this classic gents wedding ring.  Its timeless design and durable craftsmanship make it a perfect symbol of your commitment.  Designed for comfort and lasting wear.  A symbol of enduring love, this gents wedding ring is crafted for lasting beauty and comfort. The classic design represents a timeless commitment. A perfect representation of your marriage.', 'Gents Wedding Rings', 0, 1),
+(96, 'Ring', 463641, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-3.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-3.jpg\"]', 7, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This exquisite ladies wedding ring is a beautiful symbol of your love and commitment.  Its elegant design and sparkling details make it a perfect complement to an engagement ring or worn on its own.  Crafted for lasting beauty and comfort.  Designed to symbolize eternal love, this ladies wedding ring is crafted with intricate details and lasting beauty. The elegant design complements an engagement ring beautifully. A cherished symbol of your marriage.', 'Ladies Wedding Rings', 0, 0),
+(97, 'Ring', 603726, '[\"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-2.jpg\", \"https://www.voguejewellers.lk/wp-content/uploads/2024/09/Ladies-Wedding-Ring-1000x1000-2.jpg\"]', 7, 1, '[\"White Gold\", \"Yellow Gold\", \"Rose Gold\"]', 'This stunning ladies wedding ring is a radiant symbol of your enduring love.  Its intricate design and brilliant finish make it a captivating piece that perfectly represents your marital bond.  Crafted with precision and lasting quality.  A radiant symbol of love and commitment, this ladies wedding ring features intricate details and a brilliant finish. Crafted for lasting beauty and comfort. A cherished symbol of your marriage.', 'Ladies Wedding Rings', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wishlistitems`
+--
+
+CREATE TABLE `wishlistitems` (
+  `id` int(11) NOT NULL,
+  `customerId` int(11) NOT NULL,
+  `productId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `wishlistitems`
+--
+
+INSERT INTO `wishlistitems` (`id`, `customerId`, `productId`) VALUES
+(15, 1, 50),
+(16, 1, 60),
+(19, 3, 51);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_prisma_migrations`
+--
+
+CREATE TABLE `_prisma_migrations` (
+  `id` varchar(36) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `finished_at` datetime(3) DEFAULT NULL,
+  `migration_name` varchar(255) NOT NULL,
+  `logs` text DEFAULT NULL,
+  `rolled_back_at` datetime(3) DEFAULT NULL,
+  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `_prisma_migrations`
+--
+
+INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
+('0dc95075-9515-4d7c-a555-b78c862941bd', '76056b3269bb41db93cf407f9c879b0b7c81db32aa43d640680d1fe5ace0f222', '2025-06-05 21:03:32.775', '20250605210332_', NULL, NULL, '2025-06-05 21:03:32.768', 1),
+('0f2bfacc-1d02-4a8e-baae-1d74664c11ec', '4b15bc120011f4c752999befbf53668dfb8b4f9bfa51314cb54d24ce56198ba5', '2025-06-05 11:25:04.086', '20250605112503_', NULL, NULL, '2025-06-05 11:25:04.022', 1),
+('2114e438-dcf9-4b7a-8e89-c76c5024e402', '679426e77a3425544b1a92ba5924b4c1c02118286b03b6a37f16acd9a0163ede', '2025-06-05 21:39:13.237', '20250605213912_', NULL, NULL, '2025-06-05 21:39:13.226', 1),
+('53e428bb-2646-47d4-b7f8-09bc9cfdf4b7', '8738f7b18131dc4db48a0bfbdb8f925245a182ceade5b1f57503222666d983ea', '2025-05-31 05:34:38.967', '20250531053438_', NULL, NULL, '2025-05-31 05:34:38.957', 1),
+('83e29124-0f0b-40d2-a9b1-7a9e38b09b39', '8262912875cdb697cb93d03a40de1e812319234b2f9605b78328c6c5a2fc360e', '2025-06-05 20:10:10.304', '20250605201009_', NULL, NULL, '2025-06-05 20:10:10.295', 1),
+('8cf669a4-ec4b-4b92-ba46-2665ef1d23b4', '699ae3695f4817680cd366076128dadd0b39148fda25fc656c020364b62c5351', '2025-06-04 09:29:29.242', '20250604092928_', NULL, NULL, '2025-06-04 09:29:29.215', 1),
+('b128e550-972a-4437-a7e3-d55fa31138d8', 'aaeee78a4a26a23222510950ccc02406e0e26b3e848ab241de10b57cb8b1fd06', '2025-06-04 08:44:06.321', '20250604084406_', NULL, NULL, '2025-06-04 08:44:06.310', 1),
+('b8512af8-48d1-4213-8060-9456b950cfff', 'f8865d6c50c4c4d7dd4ee33b50fc45c8576b153d18b77e9f2e2b9ee4845cd2a6', '2025-06-05 19:43:47.367', '20250605194346_', NULL, NULL, '2025-06-05 19:43:47.333', 1),
+('bf2fae68-51b2-4b77-b091-6a1aec704a04', 'f2ceaefd93cac485ce74ca87a31ca83eae1c4f6e687292ed78c02ff50bef2322', '2025-06-04 09:03:01.550', '20250604090301_', NULL, NULL, '2025-06-04 09:03:01.466', 1),
+('cd1108ea-66bc-4ef8-9176-66dbb2638d7d', '7360c90e3ec2c2fa18f3c0d628d62748cb39a10aefe1d412a76d8f53b58f0806', '2025-05-31 05:26:41.978', '20250531052641_', NULL, NULL, '2025-05-31 05:26:41.940', 1),
+('d5cbdba0-2502-4ff5-af5d-86e233dece15', 'b6e5ec26d9dac40b2e291d8cd976dceaa7950c7bcfbcf6d0c237e277d443d2a5', '2025-06-04 20:45:06.515', '20250604204506_', NULL, NULL, '2025-06-04 20:45:06.505', 1),
+('d85773fe-e562-4a9c-9b98-06138571a76c', 'fd472e771fa8c3f1477aa8626d869bdf59288b7d6ac8d84115d900b7e8b7623a', '2025-06-04 08:19:36.134', '20250604081935_', NULL, NULL, '2025-06-04 08:19:36.063', 1),
+('e2e01d14-6edb-471c-a8ad-16202fa95272', '2bcd9606c2e96ecc95b49b99a297cbf75e5cdfe7cff39c509fd0dbec845f9a52', '2025-06-05 13:05:49.359', '20250605130548_', NULL, NULL, '2025-06-05 13:05:49.292', 1),
+('f9639c4a-6be0-45ab-8459-20d87954669d', '27e4b3aecc9db9b048d977d1e72b5c744b702a6e2a7199f41534cc8a31ea07cb', '2025-06-04 17:32:24.741', '20250604173224_', NULL, NULL, '2025-06-04 17:32:24.637', 1);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `CartItems_customerId_fkey` (`customerId`),
+  ADD KEY `CartItems_productId_fkey` (`productId`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `collections`
+--
+ALTER TABLE `collections`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customeraddresses`
+--
+ALTER TABLE `customeraddresses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `CustomerAddresses_customerId_fkey` (`customerId`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `Customers_email_key` (`email`),
+  ADD UNIQUE KEY `Customers_phone_key` (`phone`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Orders_customerId_fkey` (`customerId`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Products_categoryId_fkey` (`categoryId`),
+  ADD KEY `Products_collectionId_fkey` (`collectionId`);
+ALTER TABLE `products` ADD FULLTEXT KEY `name` (`name`,`description`,`shortDescription`);
+
+--
+-- Indexes for table `wishlistitems`
+--
+ALTER TABLE `wishlistitems`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `WishlistItems_customerId_fkey` (`customerId`),
+  ADD KEY `WishlistItems_productId_fkey` (`productId`);
+
+--
+-- Indexes for table `_prisma_migrations`
+--
+ALTER TABLE `_prisma_migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `collections`
+--
+ALTER TABLE `collections`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `customeraddresses`
+--
+ALTER TABLE `customeraddresses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+
+--
+-- AUTO_INCREMENT for table `wishlistitems`
+--
+ALTER TABLE `wishlistitems`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `cartitems`
+--
+ALTER TABLE `cartitems`
+  ADD CONSTRAINT `CartItems_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customers` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `CartItems_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `customeraddresses`
+--
+ALTER TABLE `customeraddresses`
+  ADD CONSTRAINT `CustomerAddresses_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customers` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `Orders_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customers` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `Products_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `categories` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `Products_collectionId_fkey` FOREIGN KEY (`collectionId`) REFERENCES `collections` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `wishlistitems`
+--
+ALTER TABLE `wishlistitems`
+  ADD CONSTRAINT `WishlistItems_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customers` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `WishlistItems_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products` (`id`) ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

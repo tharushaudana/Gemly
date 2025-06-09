@@ -130,8 +130,8 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium text-gray-900 mb-1">Email Us</h3>
                     <p className="text-gray-600">
-                      contact@luxejewelry.com<br />
-                      support@luxejewelry.com
+                      contact@gemlyjewelry.com<br />
+                      support@gemlyjewelry.com
                     </p>
                   </div>
                 </div>
