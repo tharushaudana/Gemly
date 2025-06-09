@@ -10,7 +10,7 @@ const About = () => {
       <section className="relative h-[60vh] min-h-[400px] flex items-center">
         <div className="absolute inset-0 z-0">
           <img
-            src="assets/panaromic-banner.jpg"
+            src="panaromic-banner.jpg"
             alt="Jewelry craftsmanship"
             className="w-full h-full object-cover"
           />
@@ -46,7 +46,7 @@ const About = () => {
 
             <div className="relative">
               <img
-                src="assets/mission.jpg"
+                src="mission.jpg"
                 alt="Jewelry crafting"
                 className="rounded-lg shadow-xl w-full h-auto"
               />

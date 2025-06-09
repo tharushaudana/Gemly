@@ -70,7 +70,7 @@ const Home = () => {
         <section className="relative h-screen min-h-[600px] flex items-center">
           <div className="absolute inset-0 z-0">
             <img
-              src="assets/banner.jpg"
+              src="banner.jpg"
               alt="Luxury jewelry"
               className="w-full h-full object-cover"
             />
