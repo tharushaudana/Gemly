@@ -109,7 +109,7 @@ INSERT INTO `products` (`id`, `name`, `price`, `images`, `categoryId`, `collecti
 -- Dumping data for table `cartitems`
 --
 
-INSERT INTO `cartitems` (`id`, `customerId`, `productId`, `quantity`, `metalType`) VALUES
+INSERT INTO `cartItems` (`id`, `customerId`, `productId`, `quantity`, `metalType`) VALUES
 (5, 3, 50, 1, 'Yellow Gold'),
 (21, 1, 93, 1, 'Yellow Gold');
 
@@ -117,7 +117,7 @@ INSERT INTO `cartitems` (`id`, `customerId`, `productId`, `quantity`, `metalType
 -- Dumping data for table `customeraddresses`
 --
 
-INSERT INTO `customeraddresses` (`id`, `city`, `country`, `customerId`, `isDefault`, `name`, `state`, `street`, `zip`) VALUES
+INSERT INTO `customerAddresses` (`id`, `city`, `country`, `customerId`, `isDefault`, `name`, `state`, `street`, `zip`) VALUES
 (2, 'Dikwella', 'Sri Lanka', 1, 1, 'Udanaff', 'Southern', 'Belideniya, Kottegoda', '81180'),
 (4, 'Dikwella', 'Sri Lanka', 1, 0, 'Udana 2', '', 'Belideniya, Kottegoda', '81180');
 
@@ -141,31 +141,10 @@ INSERT INTO `orders` (`id`, `cartItems`, `address`, `totalAmount`, `paymentStatu
 -- Dumping data for table `wishlistitems`
 --
 
-INSERT INTO `wishlistitems` (`id`, `customerId`, `productId`) VALUES
+INSERT INTO `wishlistItems` (`id`, `customerId`, `productId`) VALUES
 (15, 1, 50),
 (16, 1, 60),
 (19, 3, 51);
-
---
--- Dumping data for table `_prisma_migrations`
---
-
-INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
-('0dc95075-9515-4d7c-a555-b78c862941bd', '76056b3269bb41db93cf407f9c879b0b7c81db32aa43d640680d1fe5ace0f222', '2025-06-05 21:03:32.775', '20250605210332_', NULL, NULL, '2025-06-05 21:03:32.768', 1),
-('0f2bfacc-1d02-4a8e-baae-1d74664c11ec', '4b15bc120011f4c752999befbf53668dfb8b4f9bfa51314cb54d24ce56198ba5', '2025-06-05 11:25:04.086', '20250605112503_', NULL, NULL, '2025-06-05 11:25:04.022', 1),
-('2114e438-dcf9-4b7a-8e89-c76c5024e402', '679426e77a3425544b1a92ba5924b4c1c02118286b03b6a37f16acd9a0163ede', '2025-06-05 21:39:13.237', '20250605213912_', NULL, NULL, '2025-06-05 21:39:13.226', 1),
-('53e428bb-2646-47d4-b7f8-09bc9cfdf4b7', '8738f7b18131dc4db48a0bfbdb8f925245a182ceade5b1f57503222666d983ea', '2025-05-31 05:34:38.967', '20250531053438_', NULL, NULL, '2025-05-31 05:34:38.957', 1),
-('83e29124-0f0b-40d2-a9b1-7a9e38b09b39', '8262912875cdb697cb93d03a40de1e812319234b2f9605b78328c6c5a2fc360e', '2025-06-05 20:10:10.304', '20250605201009_', NULL, NULL, '2025-06-05 20:10:10.295', 1),
-('8cf669a4-ec4b-4b92-ba46-2665ef1d23b4', '699ae3695f4817680cd366076128dadd0b39148fda25fc656c020364b62c5351', '2025-06-04 09:29:29.242', '20250604092928_', NULL, NULL, '2025-06-04 09:29:29.215', 1),
-('b128e550-972a-4437-a7e3-d55fa31138d8', 'aaeee78a4a26a23222510950ccc02406e0e26b3e848ab241de10b57cb8b1fd06', '2025-06-04 08:44:06.321', '20250604084406_', NULL, NULL, '2025-06-04 08:44:06.310', 1),
-('b8512af8-48d1-4213-8060-9456b950cfff', 'f8865d6c50c4c4d7dd4ee33b50fc45c8576b153d18b77e9f2e2b9ee4845cd2a6', '2025-06-05 19:43:47.367', '20250605194346_', NULL, NULL, '2025-06-05 19:43:47.333', 1),
-('bf2fae68-51b2-4b77-b091-6a1aec704a04', 'f2ceaefd93cac485ce74ca87a31ca83eae1c4f6e687292ed78c02ff50bef2322', '2025-06-04 09:03:01.550', '20250604090301_', NULL, NULL, '2025-06-04 09:03:01.466', 1),
-('cd1108ea-66bc-4ef8-9176-66dbb2638d7d', '7360c90e3ec2c2fa18f3c0d628d62748cb39a10aefe1d412a76d8f53b58f0806', '2025-05-31 05:26:41.978', '20250531052641_', NULL, NULL, '2025-05-31 05:26:41.940', 1),
-('d5cbdba0-2502-4ff5-af5d-86e233dece15', 'b6e5ec26d9dac40b2e291d8cd976dceaa7950c7bcfbcf6d0c237e277d443d2a5', '2025-06-04 20:45:06.515', '20250604204506_', NULL, NULL, '2025-06-04 20:45:06.505', 1),
-('d85773fe-e562-4a9c-9b98-06138571a76c', 'fd472e771fa8c3f1477aa8626d869bdf59288b7d6ac8d84115d900b7e8b7623a', '2025-06-04 08:19:36.134', '20250604081935_', NULL, NULL, '2025-06-04 08:19:36.063', 1),
-('e2e01d14-6edb-471c-a8ad-16202fa95272', '2bcd9606c2e96ecc95b49b99a297cbf75e5cdfe7cff39c509fd0dbec845f9a52', '2025-06-05 13:05:49.359', '20250605130548_', NULL, NULL, '2025-06-05 13:05:49.292', 1),
-('f9639c4a-6be0-45ab-8459-20d87954669d', '27e4b3aecc9db9b048d977d1e72b5c744b702a6e2a7199f41534cc8a31ea07cb', '2025-06-04 17:32:24.741', '20250604173224_', NULL, NULL, '2025-06-04 17:32:24.637', 1);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
