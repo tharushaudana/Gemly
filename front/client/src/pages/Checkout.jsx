@@ -38,8 +38,6 @@ const Checkout = () => {
     if (user && user.addresses && user.addresses.length > 0) {
       const defaultAddress = user.addresses.find(addr => addr.isDefault);
       setSelectedAddressId(defaultAddress?.id || user.addresses[0].id);
-    } else {
-      setUseExistingAddress(false);
     }
   }, [cartItems.length, isAuthenticated, navigate, user]);
 

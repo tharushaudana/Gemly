@@ -175,28 +175,6 @@ const Register = () => {
                   <span className="px-2 bg-white text-gray-500">Or sign up with</span>
                 </div>
               </div>
-
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                {/* Social login buttons - functionality not implemented in this snippet, but structure is fine */}
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Facebook size={20} className="text-[#1877F2]" />
-                </button>
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Github size={20} className="text-black" />
-                </button>
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Mail size={20} className="text-[#D4AF37]" />
-                </button>
-              </div>
             </div>
 
             <div className="mt-6 text-center">
