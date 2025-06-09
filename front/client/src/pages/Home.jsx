@@ -146,7 +146,7 @@ const Home = () => {
         <section className="py-20 bg-[#1A237E] text-white relative overflow-hidden">
           <div className="absolute inset-0 z-0 opacity-20">
             <img
-              src="assets/panaromic-banner.jpg"
+              src="panaromic-banner.jpg"
               alt="Luxury jewelry background"
               className="w-full h-full object-cover"
             />
