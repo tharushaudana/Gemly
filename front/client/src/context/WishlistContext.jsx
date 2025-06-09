@@ -33,7 +33,7 @@ export const WishlistProvider = ({ children }) => {
       });
     } catch (error) {
       console.error('Error adding to wishlist:', error);
-      throw new Error('Failed to add item to wishlist');
+      throw new Error(error.message);
     }
   };
 
@@ -53,7 +53,7 @@ export const WishlistProvider = ({ children }) => {
       setWishlistItems(prevItems => prevItems.filter(item => item.id !== productId));
     } catch (error) {
       console.error('Error removing from wishlist:', error);
-      throw new Error('Failed to remove item from wishlist');
+      throw new Error(error.message);
     }
   };
 
@@ -72,7 +72,7 @@ export const WishlistProvider = ({ children }) => {
       setWishlistItems([]);
     } catch (error) {
       console.error('Error clearing wishlist:', error);
-      throw new Error('Failed to clear wishlist');
+      throw new Error(error.message);
     }
   };
 

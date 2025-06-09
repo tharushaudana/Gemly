@@ -45,7 +45,7 @@ export const CartProvider = ({ children }) => {
       });
     } catch (error) {
       console.error('Error adding to cart:', error);
-      throw new Error('Failed to add item to cart');
+      throw new Error(error.message);
     }
   };
 
@@ -65,7 +65,7 @@ export const CartProvider = ({ children }) => {
       setCartItems(prevItems => prevItems.filter(item => item.id !== cartItemId));
     } catch (error) {
       console.error('Error removing from cart:', error);
-      throw new Error('Failed to remove item from cart');
+      throw new Error(error.message);
     }
   };
 
