@@ -108,8 +108,8 @@ async function getProducts(queryParams) {
 
         // Preprocess product data
         products.forEach(product => {
-            if (product.metalType) product.metalType = JSON.parse(product.metalType);
-            if (product.images) product.images = JSON.parse(product.images);
+            if (product.metalType && typeof product.metalType === "string") product.metalType = JSON.parse(product.metalType);
+            if (product.images && typeof product.images === "string") product.images = JSON.parse(product.images);
             product.isNew = Boolean(product.isNew);
             product.isBestSeller = Boolean(product.isBestSeller);
         });
